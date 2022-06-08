@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import logger from 'morgan';
 import httpErrors from 'http-errors';
 import ErrorHandler from './errors/error-handler';
 import ApiRoutes from './routes/api-routes';
@@ -10,7 +11,8 @@ dotenv.config();
 const app = express();
 
 app.use(cors({ preflightContinue: true }));
-
+app.use(logger('dev'));
+app.use(express.json());
 
 app.get('/', (req, res) => {
   res.send('<h1>Welcome to royaltysubs REST API.</H1>');

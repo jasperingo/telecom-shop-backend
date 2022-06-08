@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
+import ResponseDTO from '../dtos/response-dto';
 
 const UserController = {
   create(req: Request, res: Response) {
-    res.send('Yam is good');
+    res.send(ResponseDTO.success('User created'));
   }
 };
 
