@@ -5,8 +5,12 @@ import express from 'express';
 import cors from 'cors';
 import logger from 'morgan';
 import httpErrors from 'http-errors';
+import passport from 'passport';
 import ErrorHandler from './errors/error-handler';
 import ApiRoutes from './routes/api-routes';
+import { PasswordAuth } from './configs/auth-config';
+
+passport.use(PasswordAuth);
 
 const app = express();
 
