@@ -17,6 +17,17 @@ export const ValidationErrorFormatter = (err: ValidationError): ValidationErrorF
   };
 };
 
+// const ValidationHasServerError = (errors: ValidationErrorFormat[]) => {
+//   for (const err of errors) {
+//     if (err.message as any instanceof Error) {
+//       return err.message;
+//     }
+//   }
+
+//   return null;
+// };
+
 export const ValidationBadRequest = (error: Result<ValidationError>) => {
-  return createHttpError(400, {}, { data: error.formatWith(ValidationErrorFormatter).array() });
+  const data = error.formatWith(ValidationErrorFormatter).array();
+  return new createHttpError.BadRequest(data as any);
 };

@@ -1,6 +1,6 @@
-
 export default class ResponseDTO {
-
+  
+  /*eslint-disable */
   constructor(
     public status: 'error' | 'success',
     public message?: string, 

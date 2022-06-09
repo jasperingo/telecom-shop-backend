@@ -1,7 +1,25 @@
-import { Model, DataTypes } from 'sequelize';
+import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import DatabaseConnection from '../configs/database-config';
 
-class User extends Model {
+class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
+
+  declare id: CreationOptional<number>;
+
+  declare firstName: string;
+
+  declare lastName: string;
+
+  declare email: string;
+
+  declare phoneNumber: string;
+
+  declare password: string;
+
+  declare status: string;
+
+  declare admin: boolean;
+
+  declare createdAt: CreationOptional<Date>;
 
   static STATUS_ACTIVATED = 'activated';
 

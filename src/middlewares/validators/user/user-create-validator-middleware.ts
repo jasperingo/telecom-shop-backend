@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { checkSchema, Schema, validationResult } from 'express-validator';
 import { ValidationBadRequest } from '../../../errors/validation-error-handler';
+import UserRepository from '../../../repositories/user-repository';
 import { isEmail, isMobilePhone, isPasswordLength, notEmpty } from '../validation-contraints';
 
 const schema: Schema = {
@@ -12,12 +13,26 @@ const schema: Schema = {
     notEmpty,
 
     isEmail,
+
+    custom: {
+      options: async (value) => {
+        if (await UserRepository.existsByEmail(value))
+          throw 'Field already exists';
+      }
+    }
   },
 
   phoneNumber: {
     notEmpty,
 
     isMobilePhone,
+
+    custom: {
+      options: async (value) => {
+        if (await UserRepository.existsByPhoneNumber(value))
+          throw 'Field already exists';
+      }
+    }
   },
 
   password: {
