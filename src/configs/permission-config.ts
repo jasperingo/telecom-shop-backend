@@ -5,6 +5,7 @@ import {
   InferSubjects,
   ExtractSubjectType,
 } from '@casl/ability';
+import Product from '../models/Product';
 import User from '../models/User';
 
 /*eslint-disable */
@@ -20,6 +21,7 @@ export enum Action {
 export type Subjects =
   | InferSubjects<
       | typeof User
+      | typeof Product
     >
   | 'all';
 
@@ -37,20 +39,19 @@ export const PermissionBuilder = (user: User) => {
     { id: user.id, status: User.STATUS_ACTIVATED }
   );
 
+  can([Action.Read, Action.ReadOne], Product);
+
   if (user.admin) {
     can([Action.Read, Action.ReadOne], User, { status: User.STATUS_ACTIVATED });
     can(Action.Update, User, ['status'], { id: { $ne: user.id }, status: User.STATUS_ACTIVATED });
+
+    can(Action.Update, Product);
   }
 
   if (user.admin && user.adminRole === User.ADMIN_ROLE_SUPER) {
     can(Action.Update, User, ['admin'], { id: { $ne: user.id } });
   }
 
-  // can(Action.ReadList, Product);
-  // can([Action.Read, Action.ReadList], Category);
-  // can(Action.Read, Product, { available: true });
-  // can(Action.Read, Customer, { id: customer.id });
-  // can(Action.Update, Customer, { id: customer.id });
   // can<FlatOrder>([Action.Read, Action.ReadList], Order, {
   //   'customer.id': customer.id,
   // });
