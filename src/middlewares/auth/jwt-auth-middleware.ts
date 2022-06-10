@@ -3,9 +3,9 @@ import createHttpError from 'http-errors';
 import passport from 'passport';
 import { InternalServerError } from '../../errors/server-error-handler';
 
-export default function PasswordAuthMiddleware(req: Request, res: Response, next: NextFunction) { 
+export default function JwtAuthMiddleware(req: Request, res: Response, next: NextFunction) { 
   passport.authenticate(
-    'local', 
+    'jwt', 
     (err, user) => {
       if (err !== null) {
         next(InternalServerError(err));

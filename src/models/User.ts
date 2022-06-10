@@ -19,16 +19,29 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
 
   declare admin: boolean;
 
+  declare adminRole: string | null;
+
   declare createdAt: CreationOptional<Date>;
 
   static STATUS_ACTIVATED = 'activated';
 
   static STATUS_DEACTIVATED = 'deactivated';
 
+  static ADMIN_ROLE_SUB = 'sub';
+
+  static ADMIN_ROLE_SUPER = 'super';
+
   static getStatuses() {
     return [
       User.STATUS_ACTIVATED,
-      User.STATUS_DEACTIVATED
+      User.STATUS_DEACTIVATED,
+    ];
+  }
+
+  static getAdminRoles() {
+    return [
+      User.ADMIN_ROLE_SUB,
+      User.ADMIN_ROLE_SUPER,
     ];
   }
 }
@@ -78,6 +91,11 @@ User.init({
   admin: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
+  },
+
+  adminRole: {
+    type: DataTypes.ENUM(...User.getAdminRoles()),
+    field: 'admin_role',
   },
 
   createdAt: {

@@ -19,6 +19,7 @@
   "author": "jasperiq",
   "license": "MIT",
   "dependencies": {
+    "@casl/ability": "^5.4.4",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
@@ -29,6 +30,7 @@
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "passport": "^0.6.0",
+    "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
@@ -45,6 +47,7 @@
     "@types/morgan": "^1.9.3",
     "@types/node": "^17.0.38",
     "@types/passport": "^1.0.8",
+    "@types/passport-jwt": "^3.0.6",
     "@types/passport-local": "^1.0.34",
     "@types/shelljs": "^0.8.11",
     "@typescript-eslint/eslint-plugin": "^5.27.0",

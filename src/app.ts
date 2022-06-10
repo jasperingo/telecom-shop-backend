@@ -8,8 +8,9 @@ import httpErrors from 'http-errors';
 import passport from 'passport';
 import ErrorHandler from './errors/error-handler';
 import ApiRoutes from './routes/api-routes';
-import { PasswordAuth } from './configs/auth-config';
+import { JwtAuth, PasswordAuth } from './configs/auth-config';
 
+passport.use(JwtAuth);
 passport.use(PasswordAuth);
 
 const app = express();
@@ -17,6 +18,11 @@ const app = express();
 app.use(cors({ preflightContinue: true }));
 app.use(logger('dev'));
 app.use(express.json());
+
+app.use((req, res, next) => {
+  req.data = {} as any;
+  next();
+});
 
 app.get('/', (req, res) => {
   res.send('<h1>Welcome to royaltysubs REST API.</H1>');

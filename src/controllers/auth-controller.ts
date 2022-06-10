@@ -9,7 +9,7 @@ const AuthController = {
     try {
       const user = req.user as User;
 
-      const accessToken = await JWTService.sign({ id: user.id });
+      const accessToken = await JWTService.sign({ sub: user.id });
       
       res.send(ResponseDTO.success('Authenticated', {
         accessToken,

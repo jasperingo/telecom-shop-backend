@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-type JWTPayload = { id: number };
+export type JWTPayload = { sub: string | number };
 
 const JWTService = {
   

@@ -18,6 +18,10 @@ const UserController = {
     } catch(error) {
       next(InternalServerError(error));
     }
+  },
+
+  async update(req: Request, res: Response, _next: NextFunction) {
+    res.status(statusCode.OK).send(ResponseDTO.success('User updated'));
   }
 };
 
