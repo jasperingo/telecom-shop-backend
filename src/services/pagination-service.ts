@@ -19,17 +19,35 @@ const PaginationService = {
   getCursor(req: Request, key = 'id') {
     const { limit, afterId, beforeId } = PaginationService.getParams(req);
 
-      const cursor = [];
+    const cursor = [];
 
-      if (afterId !== null) {
-        cursor.push({ [key]: { [Op.gt]: afterId } });
-      }
+    if (afterId !== null) {
+      cursor.push({ [key]: { [Op.gt]: afterId } });
+    }
 
-      if (beforeId !== null) {
-        cursor.push({ [key]: { [Op.lt]: beforeId } });
-      }
+    if (beforeId !== null) {
+      cursor.push({ [key]: { [Op.lt]: beforeId } });
+    }
 
-      return { cursor: { [Op.and]: cursor }, limit };
+    return { cursor: { [Op.and]: cursor }, limit };
+  },
+
+  getResponse(total: number, rows: any[], req: Request, key = 'id') {
+    const { limit, afterId, beforeId } = PaginationService.getParams(req);
+
+    const count = rows.length;
+
+    const firstId = 
+      (afterId !== null && beforeId === null && count < limit) 
+        ? null
+        : rows[0]?.[key] ?? null;
+    
+    const lastId =  
+      (afterId === null && beforeId !== null && count < limit) 
+        ? null
+        : rows[count-1]?.[key] ?? null;
+
+    return { total, count, before: lastId, after: firstId, limit };
   },
 };
 

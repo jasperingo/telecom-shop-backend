@@ -23,7 +23,6 @@ const UserController = {
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
-
       const { id } = req.data.user;
 
       req.body.id = id;
@@ -40,7 +39,6 @@ const UserController = {
 
   async updatePassword(req: Request, res: Response, next: NextFunction) {
     try {
-
       const { id } = req.data.user;
 
       const password = await HashService.hashPassword(req.body.newPassword);
@@ -57,7 +55,6 @@ const UserController = {
 
   async updateStatus(req: Request, res: Response, next: NextFunction) {
     try {
-
       const { id } = req.data.user;
 
       await UserRepository.updateStatus(id, req.body.status);
@@ -72,7 +69,6 @@ const UserController = {
 
   async updateAdmin(req: Request, res: Response, next: NextFunction) {
     try {
-
       const { id } = req.data.user;
 
       await UserRepository.updateAdmin(id, req.body.admin);
@@ -92,13 +88,14 @@ const UserController = {
 
   async read(req: Request, res: Response, next: NextFunction) {
     try {
-
       const { limit, cursor } = PaginationService.getCursor(req);
 
-      const { rows, count } = await UserRepository.findAll(cursor, limit);
+      const { users, count } = await UserRepository.findAll(cursor, limit);
+
+      const pagination = PaginationService.getResponse(count, users, req);
 
       res.status(statusCode.OK)
-        .send(ResponseDTO.success('Users fetched', { users: rows, pagination: { count }}));
+        .send(ResponseDTO.success('Users fetched', { users, pagination }));
     } catch(error) {
       next(InternalServerError(error));
     }

@@ -1,4 +1,5 @@
 import { WhereOptions } from 'sequelize/types';
+import DatabaseConnection from '../configs/database-config';
 import User from '../models/User';
 
 const UserRepository = {
@@ -22,7 +23,20 @@ const UserRepository = {
   },
 
   findAll(cursor: WhereOptions<User>, limit: number) {
-    return User.findAndCountAll({ where: cursor, limit });
+    return DatabaseConnection.transaction(async (transaction) => {
+      const [users, count] = await Promise.all([
+        User.findAll({ 
+          where: cursor, 
+          limit, 
+          order: [['createdAt', 'DESC']], 
+          transaction,
+        }),
+
+        User.count({ transaction }),
+      ]);
+
+      return { users, count };
+    });
   },
 
   create({ firstName, lastName, email, phoneNumber, password }: User) {
