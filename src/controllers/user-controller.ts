@@ -4,6 +4,7 @@ import ResponseDTO from '../dtos/response-dto';
 import { InternalServerError } from '../errors/server-error-handler';
 import UserRepository from '../repositories/user-repository';
 import HashService from '../services/hash-service';
+import PaginationService from '../services/pagination-service';
 
 const UserController = {
   async create(req: Request, res: Response, next: NextFunction) {
@@ -20,8 +21,87 @@ const UserController = {
     }
   },
 
-  async update(req: Request, res: Response, _next: NextFunction) {
-    res.status(statusCode.OK).send(ResponseDTO.success('User updated'));
+  async update(req: Request, res: Response, next: NextFunction) {
+    try {
+
+      const { id } = req.data.user;
+
+      req.body.id = id;
+
+      await UserRepository.update(req.body);
+
+      const user = await UserRepository.findById(id);
+
+      res.status(statusCode.OK).send(ResponseDTO.success('User updated', user));
+    } catch(error) {
+      next(InternalServerError(error));
+    }
+  },
+
+  async updatePassword(req: Request, res: Response, next: NextFunction) {
+    try {
+
+      const { id } = req.data.user;
+
+      const password = await HashService.hashPassword(req.body.newPassword);
+
+      await UserRepository.updatePassword(id, password);
+
+      const user = await UserRepository.findById(id);
+
+      res.status(statusCode.OK).send(ResponseDTO.success('User password updated', user));
+    } catch(error) {
+      next(InternalServerError(error));
+    }
+  },
+
+  async updateStatus(req: Request, res: Response, next: NextFunction) {
+    try {
+
+      const { id } = req.data.user;
+
+      await UserRepository.updateStatus(id, req.body.status);
+
+      const user = await UserRepository.findById(id);
+
+      res.status(statusCode.OK).send(ResponseDTO.success('User status updated', user));
+    } catch(error) {
+      next(InternalServerError(error));
+    }
+  },
+
+  async updateAdmin(req: Request, res: Response, next: NextFunction) {
+    try {
+
+      const { id } = req.data.user;
+
+      await UserRepository.updateAdmin(id, req.body.admin);
+
+      const user = await UserRepository.findById(id);
+
+      res.status(statusCode.OK).send(ResponseDTO.success('User admin updated', user));
+    } catch(error) {
+      next(InternalServerError(error));
+    }
+  },
+
+  readOne(req: Request, res: Response) {
+    res.status(statusCode.OK)
+      .send(ResponseDTO.success('User fetched', req.data.user));
+  },
+
+  async read(req: Request, res: Response, next: NextFunction) {
+    try {
+
+      const { limit, cursor } = PaginationService.getCursor(req);
+
+      const { rows, count } = await UserRepository.findAll(cursor, limit);
+
+      res.status(statusCode.OK)
+        .send(ResponseDTO.success('Users fetched', { users: rows, pagination: { count }}));
+    } catch(error) {
+      next(InternalServerError(error));
+    }
   }
 };
 

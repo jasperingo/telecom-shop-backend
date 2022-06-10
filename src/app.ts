@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
   res.send('<h1>Welcome to royaltysubs REST API.</H1>');
 });
 
-app.use('/api', ApiRoutes);
+app.use('/api/v1', ApiRoutes);
 
 app.use((req, res, next) => {
   next(new httpErrors.NotFound('Resource could not be found'));
