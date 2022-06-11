@@ -4,6 +4,11 @@ export const notEmpty = {
   errorMessage: 'This field is required'
 };
 
+export const isNumeric = {
+  bail: true,
+  errorMessage: 'Field is invalid',
+};
+
 export const isEmail = {
   bail: true,
   errorMessage: 'This field is invalid'

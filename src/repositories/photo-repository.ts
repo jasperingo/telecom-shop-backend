@@ -1,3 +1,4 @@
+import { Transaction } from 'sequelize';
 import Photo from '../models/Photo';
 
 const PhotoRepository = {
@@ -17,6 +18,10 @@ const PhotoRepository = {
 
   update({ id, name, mimetype, size }: Photo) {
     return Photo.update({ name, mimetype, size }, { where: { id } });
+  },
+
+  updateBrand(id: number, brand_id: number, transaction?: Transaction) {
+    return Photo.update({ brand_id }, { where: { id }, transaction });
   },
 
 };
