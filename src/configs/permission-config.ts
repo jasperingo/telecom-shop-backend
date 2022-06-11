@@ -8,6 +8,7 @@ import {
 import Brand from '../models/Brand';
 import Photo from '../models/Photo';
 import Product from '../models/Product';
+import ProductUnit from '../models/ProductUnit';
 import User from '../models/User';
 
 /*eslint-disable */
@@ -26,6 +27,7 @@ export type Subjects =
       | typeof Product
       | typeof Photo
       | typeof Brand
+      | typeof ProductUnit
     >
   | 'all';
 
@@ -43,14 +45,18 @@ export const PermissionBuilder = (user: User) => {
     { id: user.id, status: User.STATUS_ACTIVATED }
   );
 
-  can([Action.Read, Action.ReadOne], Product);
+  can([Action.Read, Action.ReadOne], [Product, ProductUnit]);
 
   if (user.admin) {
-    can([Action.Read, Action.ReadOne], User, { status: User.STATUS_ACTIVATED });
-    can(Action.Update, User, ['status'], { id: { $ne: user.id }, status: User.STATUS_ACTIVATED });
+    can(Action.Update, Product);
 
     can(Action.Manage, [Photo, Brand]);
-    can(Action.Update, Product);
+
+    can([Action.Update, Action.Create], ProductUnit);
+
+    can([Action.Read, Action.ReadOne], User, { status: User.STATUS_ACTIVATED });
+    
+    can(Action.Update, User, ['status'], { id: { $ne: user.id }, status: User.STATUS_ACTIVATED });
   }
 
   if (user.admin && user.adminRole === User.ADMIN_ROLE_SUPER) {

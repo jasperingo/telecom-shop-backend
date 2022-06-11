@@ -35,7 +35,7 @@ const schema: Schema = {
         if (photo === null)
           throw 'Field do not exist';
         
-        if (photo.brand_id !== null) 
+        if (photo.brandId !== null) 
           throw 'Field already in use';
       }
     }

@@ -20,8 +20,8 @@ const PhotoRepository = {
     return Photo.update({ name, mimetype, size }, { where: { id } });
   },
 
-  updateBrand(id: number, brand_id: number, transaction?: Transaction) {
-    return Photo.update({ brand_id }, { where: { id }, transaction });
+  updateBrand(id: number, brandId: number, transaction?: Transaction) {
+    return Photo.update({ brandId }, { where: { id }, transaction });
   },
 
 };

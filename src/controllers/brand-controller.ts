@@ -10,7 +10,6 @@ import PaginationService from '../services/pagination-service';
 const BrandController = {
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-
       const result = await DatabaseConnection.transaction(async (transaction) => {
         const newBrand = await BrandRepository.create(req.body, transaction);
         await PhotoRepository.updateBrand(req.body.photoId, newBrand.id, transaction);

@@ -2,53 +2,64 @@ import { NextFunction, Request, Response } from 'express';
 import { checkSchema, Schema, validationResult } from 'express-validator';
 import { ValidationBadRequest } from '../../../errors/validation-error-handler';
 import BrandRepository from '../../../repositories/brand-repository';
-import PhotoRepository from '../../../repositories/photo-repository';
-import { notEmpty, isNumeric } from '../validation-contraints';
+import ProductRepository from '../../../repositories/product-repository';
+import { notEmpty, isNumeric, isBoolean } from '../validation-contraints';
 
 const schema: Schema = {
-  apiCode: { 
-    optional: true,
+  name: { notEmpty },
 
+  price: { 
     notEmpty, 
 
     isNumeric,
   },
 
-  name: {
-    optional: true,
+  duration: { 
+    notEmpty, 
 
-    notEmpty,
-
-    custom: {
-      options: async (value) => {
-        if (await BrandRepository.existsByName(value))
-          throw 'Field already exists';
-      }
-    }
+    isNumeric,
   },
 
-  photoId: {
-    optional: true,
+  apiCode: { 
+    notEmpty, 
+
+    isNumeric,
+  },
+
+  available: {
+    notEmpty,
     
+    isBoolean,
+  },
+
+  productId: {
     notEmpty,
 
     isNumeric,
 
     custom: {
       options: async (value) => {
-        const photo = await PhotoRepository.findById(value);
-        
-        if (photo === null)
+        if (! (await ProductRepository.existsById(value)))
           throw 'Field do not exist';
-        
-        if (photo.brandId !== null) 
-          throw 'Field already in use';
+      }
+    }
+  },
+
+  brandId: {
+    notEmpty,
+
+    isNumeric,
+
+    custom: {
+      options: async (value) => {
+        if (! (await BrandRepository.existsById(value)))
+          throw 'Field do not exist';
       }
     }
   }
 };
 
-export default async function BrandUpdateValidatorMiddleware(
+export default async function ProductUnitCreateValidatorMiddleware(
   req: Request, 
   res: Response, 
   next: NextFunction

@@ -1,4 +1,12 @@
-import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, NonAttribute, ForeignKey } from 'sequelize';
+import { 
+  Model, 
+  DataTypes, 
+  InferAttributes, 
+  InferCreationAttributes, 
+  CreationOptional, 
+  NonAttribute, 
+  ForeignKey 
+} from 'sequelize';
 import DatabaseConnection from '../configs/database-config';
 import Brand from './Brand';
 
@@ -6,7 +14,7 @@ class Photo extends Model<InferAttributes<Photo>, InferCreationAttributes<Photo>
 
   declare id: CreationOptional<number>;
 
-  declare brand_id: ForeignKey<Brand['id']> | null;
+  declare brandId: ForeignKey<Brand['id']> | null;
 
   declare brand?: NonAttribute<Brand>;
 
@@ -67,7 +75,8 @@ Photo.init({
 });
 
 const foreignKey = {
-  name: 'brand_id',
+  name: 'brandId',
+  field: 'brand_id',
   type: DataTypes.INTEGER
 };
 

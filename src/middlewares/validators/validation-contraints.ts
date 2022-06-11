@@ -19,6 +19,11 @@ export const isMobilePhone = {
   errorMessage: 'This field is invalid'
 };
 
+export const isBoolean = {
+  bail: true,
+  errorMessage: 'Field is invalid',
+};
+
 export const isPasswordLength = {
   bail: true,
   options: { min: 6 },

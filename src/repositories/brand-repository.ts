@@ -4,6 +4,11 @@ import Brand from '../models/Brand';
 import Photo from '../models/Photo';
 
 const BrandRepository = {
+  async existsById(id: number) {
+    const brand = await Brand.findByPk(id);
+    return brand !== null;
+  },
+
   async existsByName(name: string) {
     const brand = await Brand.findOne({ where: { name } });
     return brand !== null;

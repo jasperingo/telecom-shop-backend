@@ -2,6 +2,10 @@ import DatabaseConnection from '../configs/database-config';
 import Product from '../models/Product';
 
 const ProductRepository = {
+  async existsById(id: number) {
+    const product = await Product.findByPk(id);
+    return product !== null;
+  },
 
   async existsByName(name: string) {
     const product = await Product.findOne({ where: { name } });
