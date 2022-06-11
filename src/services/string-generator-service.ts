@@ -2,6 +2,7 @@ import * as randomstring from 'randomstring';
 
 const StringGeneratorService = {
   async generate(
+    /*eslint-disable */
     exists: (code: string) => Promise<boolean>,
     options?: number | randomstring.GenerateOptions,
     attempts = 3,

@@ -29,12 +29,12 @@ const ProductController = {
 
   async read(req: Request, res: Response, next: NextFunction) {
     try {
-      const { product, count } = await ProductRepository.findAll();
+      const { products, count } = await ProductRepository.findAll();
 
-      const pagination = PaginationService.getResponse(count, product, req);
+      const pagination = PaginationService.getResponse(count, products, req);
 
       res.status(statusCode.OK)
-        .send(ResponseDTO.success('Products fetched', product, { pagination }));
+        .send(ResponseDTO.success('Products fetched', products, { pagination }));
     } catch(error) {
       next(InternalServerError(error));
     }

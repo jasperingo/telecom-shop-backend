@@ -1,4 +1,5 @@
 import { Transaction } from 'sequelize';
+import DatabaseConnection from '../configs/database-config';
 import Brand from '../models/Brand';
 import Photo from '../models/Photo';
 
@@ -16,8 +17,23 @@ const BrandRepository = {
     });
   },
 
+  findAll() {
+    return DatabaseConnection.transaction(async (transaction) => {
+      const [brands, count] = await Promise.all([
+        Brand.findAll({ transaction }),
+        Brand.count({ transaction }),
+      ]);
+
+      return { brands, count };
+    });
+  },
+
   create({ name, apiCode }: Brand, transaction?: Transaction) {
     return Brand.create({ name, apiCode }, { transaction });
+  },
+
+  update({ id, name, apiCode }: Brand, transaction?: Transaction) {
+    return Brand.update({ name, apiCode }, { where: { id }, transaction });
   },
 };
 

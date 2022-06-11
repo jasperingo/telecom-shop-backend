@@ -14,12 +14,12 @@ const ProductRepository = {
 
   findAll() {
     return DatabaseConnection.transaction(async (transaction) => {
-      const [product, count] = await Promise.all([
+      const [products, count] = await Promise.all([
         Product.findAll({ transaction }),
         Product.count({ transaction }),
       ]);
 
-      return { product, count };
+      return { products, count };
     });
   },
 

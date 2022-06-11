@@ -49,7 +49,7 @@ export const PermissionBuilder = (user: User) => {
     can([Action.Read, Action.ReadOne], User, { status: User.STATUS_ACTIVATED });
     can(Action.Update, User, ['status'], { id: { $ne: user.id }, status: User.STATUS_ACTIVATED });
 
-    can([Action.Create, Action.Update], [Photo, Brand]);
+    can(Action.Manage, [Photo, Brand]);
     can(Action.Update, Product);
   }
 
