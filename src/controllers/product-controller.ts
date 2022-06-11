@@ -34,7 +34,7 @@ const ProductController = {
       const pagination = PaginationService.getResponse(count, product, req);
 
       res.status(statusCode.OK)
-        .send(ResponseDTO.success('Users fetched', { product, pagination }));
+        .send(ResponseDTO.success('Products fetched', product, { pagination }));
     } catch(error) {
       next(InternalServerError(error));
     }

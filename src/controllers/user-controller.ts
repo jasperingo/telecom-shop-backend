@@ -95,7 +95,7 @@ const UserController = {
       const pagination = PaginationService.getResponse(count, users, req);
 
       res.status(statusCode.OK)
-        .send(ResponseDTO.success('Users fetched', { users, pagination }));
+        .send(ResponseDTO.success('Users fetched', users, { pagination }));
     } catch(error) {
       next(InternalServerError(error));
     }
