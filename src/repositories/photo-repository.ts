@@ -15,6 +15,10 @@ const PhotoRepository = {
     return Photo.create({ name, mimetype, size });
   },
 
+  update({ id, name, mimetype, size }: Photo) {
+    return Photo.update({ name, mimetype, size }, { where: { id } });
+  },
+
 };
 
 export default PhotoRepository;

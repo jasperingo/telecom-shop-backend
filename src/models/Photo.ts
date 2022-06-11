@@ -15,6 +15,8 @@ class Photo extends Model<InferAttributes<Photo>, InferCreationAttributes<Photo>
   declare createdAt: CreationOptional<Date>;
 
   declare href: CreationOptional<string>;
+
+  static readonly UPLOAD_DIRECTORY = './public/images';
 }
 
 Photo.init({

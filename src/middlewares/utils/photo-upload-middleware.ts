@@ -3,12 +3,13 @@ import multer from 'multer';
 import createHttpError from 'http-errors';
 import StringGeneratorService from '../../services/string-generator-service';
 import PhotoRepository from '../../repositories/photo-repository';
+import Photo from '../../models/Photo';
 
 const PhotoUploadMiddleware = multer({ 
   storage: multer.diskStorage({
     
     destination(req, file, cb) {
-      cb(null, './public/images');
+      cb(null, Photo.UPLOAD_DIRECTORY);
     },
   
     async filename(req, file, cb) {
