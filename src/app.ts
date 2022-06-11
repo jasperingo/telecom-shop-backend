@@ -18,6 +18,7 @@ const app = express();
 app.use(cors({ preflightContinue: true }));
 app.use(logger('dev'));
 app.use(express.json());
+app.use(express.static('public'));
 
 app.use((req, res, next) => {
   req.data = {} as any;

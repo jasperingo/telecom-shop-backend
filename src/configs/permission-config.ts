@@ -5,6 +5,8 @@ import {
   InferSubjects,
   ExtractSubjectType,
 } from '@casl/ability';
+import Brand from '../models/Brand';
+import Photo from '../models/Photo';
 import Product from '../models/Product';
 import User from '../models/User';
 
@@ -22,6 +24,8 @@ export type Subjects =
   | InferSubjects<
       | typeof User
       | typeof Product
+      | typeof Photo
+      | typeof Brand
     >
   | 'all';
 
@@ -45,20 +49,13 @@ export const PermissionBuilder = (user: User) => {
     can([Action.Read, Action.ReadOne], User, { status: User.STATUS_ACTIVATED });
     can(Action.Update, User, ['status'], { id: { $ne: user.id }, status: User.STATUS_ACTIVATED });
 
+    can([Action.Create, Action.Update], [Photo, Brand]);
     can(Action.Update, Product);
   }
 
   if (user.admin && user.adminRole === User.ADMIN_ROLE_SUPER) {
     can(Action.Update, User, ['admin'], { id: { $ne: user.id } });
   }
-
-  // can<FlatOrder>([Action.Read, Action.ReadList], Order, {
-  //   'customer.id': customer.id,
-  // });
-  // can<FlatOrderItem>(Action.Update, OrderItem, 'status', {
-  //   status: { $in: [OrderItemStatus.PENDING, OrderItemStatus.TRANSPORTING] },
-  //   'order.customer.id': customer.id,
-  // });
 
   return build({
     detectSubjectType: (item) =>

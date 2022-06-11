@@ -3,6 +3,9 @@ declare namespace Express {
     data: {
       user: import('./models/User').default,
       product: import('./models/Product').default,
+      brand: import('./models/Brand').default,
+      photo: import('./models/Photo').default,
+      // productUnit: import('./models/Photo').default,
     };
   }
 }
