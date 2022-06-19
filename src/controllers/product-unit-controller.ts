@@ -32,6 +32,11 @@ const ProductUnitController = {
       next(InternalServerError(error));
     }
   },
+
+  readOne(req: Request, res: Response) {
+    res.status(statusCode.OK)
+      .send(ResponseDTO.success('Product unit fetched', req.data.productUnit));
+  },
 };
 
 export default ProductUnitController;

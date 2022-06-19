@@ -26,4 +26,10 @@ ProductUnitRouter.put(
   ProductUnitController.update.bind(ProductUnitController)
 );
 
+ProductUnitRouter.get(
+  '/:id',
+  ProductUnitFetchMiddleware,
+  ProductUnitController.readOne.bind(ProductUnitController)
+);
+
 export default ProductUnitRouter;
