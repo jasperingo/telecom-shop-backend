@@ -9,7 +9,8 @@
     "clean": "rimraf build/*",
     "build": "npm-run-all clean tsc",
     "dev:start": "npm-run-all build start",
-    "dev": "nodemon --watch src -e ts,ejs --exec npm run dev:start"
+    "old:dev": "nodemon --watch src -e ts,ejs --exec npm run dev:start",
+    "dev": "nodemon --config nodemon.json src/app.ts"
   },
   "keywords": [
     "express.js",

@@ -7,7 +7,7 @@ class Brand extends Model<InferAttributes<Brand>, InferCreationAttributes<Brand>
 
   declare name: string;
 
-  declare apiCode: string;
+  declare apiCode: number;
 
   declare createdAt: CreationOptional<Date>;
 }

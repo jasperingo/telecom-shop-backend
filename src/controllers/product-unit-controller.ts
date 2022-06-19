@@ -16,6 +16,22 @@ const ProductUnitController = {
       next(InternalServerError(error));
     }
   },
+
+  async update(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.data.productUnit;
+
+      req.body.id = id;
+
+      await ProductUnitRepository.update(req.body);
+
+      const productUnit = await ProductUnitRepository.findById(id);
+
+      res.status(statusCode.OK).send(ResponseDTO.success('Product unit updated', productUnit));
+    } catch(error) {
+      next(InternalServerError(error));
+    }
+  },
 };
 
 export default ProductUnitController;

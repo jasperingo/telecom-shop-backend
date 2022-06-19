@@ -37,6 +37,13 @@ const ProductUnitRepository = {
   create({ name, apiCode, brandId, productId, price, duration, available }: ProductUnit) {
     return ProductUnit.create({ name, apiCode, brandId, productId, price, duration, available });
   },
+
+  update({ id, name, apiCode, brandId, price, duration, available }: ProductUnit) {
+    return ProductUnit.update(
+      { name, apiCode, brandId, price, duration, available },
+      { where: { id } }
+    );
+  },
 };
 
 export default ProductUnitRepository;

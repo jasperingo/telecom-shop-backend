@@ -25,11 +25,11 @@ class ProductUnit extends Model<InferAttributes<ProductUnit>, InferCreationAttri
 
   declare name: string;
 
-  declare price: string;
+  declare price: number;
 
-  declare duration: boolean;
+  declare duration: number;
 
-  declare apiCode: string;
+  declare apiCode: number;
 
   declare available: boolean;
 
@@ -61,7 +61,7 @@ ProductUnit.init({
   },
 
   apiCode: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     allowNull: false,
     field: 'api_code',
   },
