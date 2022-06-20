@@ -5,6 +5,7 @@ import { InternalServerError } from '../errors/server-error-handler';
 import Transaction from '../models/Transaction';
 import User from '../models/User';
 import TransactionRepository from '../repositories/transaction-repository';
+import PaginationService from '../services/pagination-service';
 import StringGeneratorService from '../services/string-generator-service';
 
 const TransactionController = {
@@ -66,6 +67,21 @@ const TransactionController = {
   readOne(req: Request, res: Response) {
     res.status(statusCode.OK)
       .send(ResponseDTO.success('Transaction fetched', req.data.transaction));
+  },
+
+  async read(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { limit, cursor } = PaginationService.getCursor(req);
+
+      const { transaction, count } = await TransactionRepository.findAll(cursor, limit);
+
+      const pagination = PaginationService.getResponse(count, transaction, req);
+
+      res.status(statusCode.OK)
+        .send(ResponseDTO.success('Transaction fetched', transaction, { pagination }));
+    } catch(error) {
+      next(InternalServerError(error));
+    }
   }
 };
 

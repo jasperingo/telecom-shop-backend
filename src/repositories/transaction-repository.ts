@@ -1,3 +1,5 @@
+import { WhereOptions } from 'sequelize';
+import DatabaseConnection from '../configs/database-config';
 import Brand from '../models/Brand';
 import Photo from '../models/Photo';
 import ProductUnit from '../models/ProductUnit';
@@ -29,6 +31,23 @@ const TransactionRepository = {
           model: User
         }
       ]
+    });
+  },
+
+  findAll(cursor: WhereOptions<Transaction>, limit: number) {
+    return DatabaseConnection.transaction(async (transaction) => {
+      const [tx, count] = await Promise.all([
+        Transaction.findAll({ 
+          where: cursor, 
+          limit, 
+          order: [['createdAt', 'DESC']], 
+          transaction,
+        }),
+
+        Transaction.count({ transaction }),
+      ]);
+
+      return { transaction: tx, count };
     });
   },
 

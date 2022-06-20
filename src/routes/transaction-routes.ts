@@ -5,6 +5,7 @@ import PaystackAuthMiddleware from '../middlewares/auth/paystack-auth-middleware
 import TransactionFetchMiddleware from '../middlewares/fetch/transaction-fetch-middleware';
 import TransactionCreatePermissionMiddleware from '../middlewares/permissions/transaction/transaction-create-permission-middleware';
 import TransactionReadOnePermissionMiddleware from '../middlewares/permissions/transaction/transaction-read-one-permission-middleware';
+import TransactionReadPermissionMiddleware from '../middlewares/permissions/transaction/transaction-read-permission-middleware';
 import TransactionStatusUpdatePermissionMiddleware from '../middlewares/permissions/transaction/transaction-status-update-permission-middleware';
 import TransactionDepositValidatorMiddleware from '../middlewares/validators/transaction/transaction-deposit-validator-middleware';
 import TransactionStatusUpdateValidatorMiddleware from '../middlewares/validators/transaction/transaction-status-update-validator-middleware';
@@ -40,6 +41,13 @@ TransactionRouter.get(
   JwtAuthMiddleware,
   TransactionReadOnePermissionMiddleware,
   TransactionController.readOne.bind(TransactionController)
+);
+
+TransactionRouter.get(
+  '',
+  JwtAuthMiddleware,
+  TransactionReadPermissionMiddleware,
+  TransactionController.read.bind(TransactionController)
 );
 
 export default TransactionRouter;
