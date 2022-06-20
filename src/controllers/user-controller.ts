@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import statusCode from 'http-status';
 import ResponseDTO from '../dtos/response-dto';
 import { InternalServerError } from '../errors/server-error-handler';
+import TransactionRepository from '../repositories/transaction-repository';
 import UserRepository from '../repositories/user-repository';
 import HashService from '../services/hash-service';
 import PaginationService from '../services/pagination-service';
@@ -99,7 +100,26 @@ const UserController = {
     } catch(error) {
       next(InternalServerError(error));
     }
-  }
+  },
+
+  async readTransactions(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { limit, cursor } = PaginationService.getCursor(req);
+
+      const { transactions, count } = await TransactionRepository.findAllByUserId(
+        req.data.user.id,
+        cursor,
+        limit
+      );
+
+      const pagination = PaginationService.getResponse(count, transactions, req);
+
+      res.status(statusCode.OK)
+        .send(ResponseDTO.success('Transactions fetched', transactions, { pagination }));
+    } catch(error) {
+      next(InternalServerError(error));
+    }
+  },
 };
 
 export default UserController;

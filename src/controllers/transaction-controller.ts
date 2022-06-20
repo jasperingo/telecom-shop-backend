@@ -73,12 +73,12 @@ const TransactionController = {
     try {
       const { limit, cursor } = PaginationService.getCursor(req);
 
-      const { transaction, count } = await TransactionRepository.findAll(cursor, limit);
+      const { transactions, count } = await TransactionRepository.findAll(cursor, limit);
 
-      const pagination = PaginationService.getResponse(count, transaction, req);
+      const pagination = PaginationService.getResponse(count, transactions, req);
 
       res.status(statusCode.OK)
-        .send(ResponseDTO.success('Transaction fetched', transaction, { pagination }));
+        .send(ResponseDTO.success('Transaction fetched', transactions, { pagination }));
     } catch(error) {
       next(InternalServerError(error));
     }

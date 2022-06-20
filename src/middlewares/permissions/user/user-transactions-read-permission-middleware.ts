@@ -4,14 +4,18 @@ import { Action, PermissionBuilder } from '../../../configs/permission-config';
 import Transaction from '../../../models/Transaction';
 import User from '../../../models/User';
 
-export default function TransactionReadPermissionMiddleware(
+export default function UserTransactionsReadPermissionMiddleware(
   req: Request, 
   res: Response, 
   next: NextFunction
 ) {
   const ability = PermissionBuilder(req.user as User);
 
-  if (ability.can(Action.Read, new Transaction())) {
+  const transaction = new Transaction();
+
+  transaction.userId = req.data.user.id;
+  
+  if (ability.can(Action.Read, transaction)) {
     next();
   } else {
     next(new createHttpError.Forbidden('Permission denied'));

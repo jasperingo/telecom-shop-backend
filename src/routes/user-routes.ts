@@ -6,6 +6,7 @@ import UserAdminUpdatePermissionMiddleware from '../middlewares/permissions/user
 import UserReadOnePermissionMiddleware from '../middlewares/permissions/user/user-read-one-permission-middleware';
 import UserReadPermissionMiddleware from '../middlewares/permissions/user/user-read-permission-middleware';
 import UserStatusUpdatePermissionMiddleware from '../middlewares/permissions/user/user-status-update-permission-middleware';
+import UserTransactionsReadPermissionMiddleware from '../middlewares/permissions/user/user-transactions-read-permission-middleware';
 import UserUpdatePermissionMiddleware from '../middlewares/permissions/user/user-update-permission-middleware';
 import UserAdminUpdateValidatorMiddleware from '../middlewares/validators/user/user-admin-update-validation-middleware';
 import UserCreateValidatorMiddleware from '../middlewares/validators/user/user-create-validator-middleware';
@@ -70,6 +71,14 @@ UserRoutes.put(
   UserAdminUpdatePermissionMiddleware,
   UserAdminUpdateValidatorMiddleware,
   UserController.updateAdmin.bind(UserController)
+);
+
+UserRoutes.get(
+  '/:id/transactions', 
+  UserFetchMiddleware,
+  JwtAuthMiddleware,
+  UserTransactionsReadPermissionMiddleware,
+  UserController.readTransactions.bind(UserController)
 );
 
 export default UserRoutes;

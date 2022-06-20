@@ -47,7 +47,24 @@ const TransactionRepository = {
         Transaction.count({ transaction }),
       ]);
 
-      return { transaction: tx, count };
+      return { transactions: tx, count };
+    });
+  },
+
+  findAllByUserId(userId: number, cursor: WhereOptions<Transaction>, limit: number) {
+    return DatabaseConnection.transaction(async (transaction) => {
+      const [tx, count] = await Promise.all([
+        Transaction.findAll({ 
+          where: { userId, ...cursor }, 
+          limit, 
+          order: [['createdAt', 'DESC']], 
+          transaction,
+        }),
+
+        Transaction.count({ transaction }),
+      ]);
+
+      return { transactions: tx, count };
     });
   },
 
