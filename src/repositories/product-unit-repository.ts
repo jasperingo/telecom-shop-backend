@@ -54,8 +54,8 @@ const ProductUnitRepository = {
     });
   },
 
-  create({ name, apiCode, brandId, productId, price, duration, available }: ProductUnit) {
-    return ProductUnit.create({ name, apiCode, brandId, productId, price, duration, available });
+  create({ name, apiCode, brandId, productId, price, duration, available, type }: ProductUnit) {
+    return ProductUnit.create({ name, apiCode, brandId, productId, price, duration, available, type });
   },
 
   update({ id, name, apiCode, brandId, price, duration, available }: ProductUnit) {

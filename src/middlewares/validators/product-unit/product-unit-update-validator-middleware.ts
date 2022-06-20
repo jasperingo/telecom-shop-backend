@@ -43,6 +43,12 @@ const schema: Schema = {
     isBoolean,
   },
 
+  type: {
+    optional: true,
+
+    isString: true,
+  },
+
   brandId: {
     optional: true,
     

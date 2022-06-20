@@ -33,6 +33,8 @@ class ProductUnit extends Model<InferAttributes<ProductUnit>, InferCreationAttri
 
   declare available: boolean;
 
+  declare type: string;
+
   declare createdAt: CreationOptional<Date>;
 }
 
@@ -69,6 +71,10 @@ ProductUnit.init({
   available: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
+  },
+
+  type: {
+    type: DataTypes.STRING,
   },
 
   createdAt: {

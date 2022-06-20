@@ -32,6 +32,12 @@ const schema: Schema = {
     isBoolean,
   },
 
+  type: {
+    optional: true,
+
+    isString: true,
+  },
+
   productId: {
     notEmpty,
 
