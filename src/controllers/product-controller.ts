@@ -3,6 +3,7 @@ import statusCode from 'http-status';
 import ResponseDTO from '../dtos/response-dto';
 import { InternalServerError } from '../errors/server-error-handler';
 import ProductRepository from '../repositories/product-repository';
+import ProductUnitRepository from '../repositories/product-unit-repository';
 import PaginationService from '../services/pagination-service';
 
 const ProductController = {
@@ -38,7 +39,20 @@ const ProductController = {
     } catch(error) {
       next(InternalServerError(error));
     }
-  }
+  },
+
+  async readProductUnits(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { productUnits, count } = await ProductUnitRepository.findAllByProductId(req.data.product.id);
+
+      const pagination = PaginationService.getResponse(count, productUnits, req);
+
+      res.status(statusCode.OK)
+        .send(ResponseDTO.success('Product units fetched', productUnits, { pagination }));
+    } catch(error) {
+      next(InternalServerError(error));
+    }
+  },
 };
 
 export default ProductController;

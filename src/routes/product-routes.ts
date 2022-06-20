@@ -27,4 +27,10 @@ ProductRouter.get(
   ProductController.read.bind(ProductController)
 );
 
+ProductRouter.get(
+  '/:id/product-units',
+  ProductFetchMiddleware,
+  ProductController.readProductUnits.bind(ProductController)
+);
+
 export default ProductRouter;

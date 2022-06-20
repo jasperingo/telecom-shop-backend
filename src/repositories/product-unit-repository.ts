@@ -34,6 +34,26 @@ const ProductUnitRepository = {
     });
   },
 
+  findAllByProductId(productId: number) {
+    return DatabaseConnection.transaction(async (transaction) => {
+      const [productUnits, count] = await Promise.all([
+        ProductUnit.findAll({ 
+          where: { productId },
+          include: {
+            model: Brand,
+            include: [
+              { model: Photo }
+            ],
+          }, 
+          transaction,
+        }),
+        ProductUnit.count({ where: { productId }, transaction }),
+      ]);
+
+      return { productUnits, count };
+    });
+  },
+
   create({ name, apiCode, brandId, productId, price, duration, available }: ProductUnit) {
     return ProductUnit.create({ name, apiCode, brandId, productId, price, duration, available });
   },
