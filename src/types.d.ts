@@ -6,6 +6,7 @@ declare namespace Express {
       brand: import('./models/Brand').default,
       photo: import('./models/Photo').default,
       productUnit: import('./models/ProductUnit').default,
+      transaction: import('./models/Transaction').default,
     };
   }
 }

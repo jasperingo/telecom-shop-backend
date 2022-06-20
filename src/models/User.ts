@@ -23,13 +23,13 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
 
   declare createdAt: CreationOptional<Date>;
 
-  static STATUS_ACTIVATED = 'activated';
+  static readonly STATUS_ACTIVATED = 'activated';
 
-  static STATUS_DEACTIVATED = 'deactivated';
+  static readonly STATUS_DEACTIVATED = 'deactivated';
 
-  static ADMIN_ROLE_SUB = 'sub';
+  static readonly ADMIN_ROLE_SUB = 'sub';
 
-  static ADMIN_ROLE_SUPER = 'super';
+  static readonly ADMIN_ROLE_SUPER = 'super';
 
   static getStatuses() {
     return [

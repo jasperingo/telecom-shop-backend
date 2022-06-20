@@ -9,6 +9,7 @@ import Brand from '../models/Brand';
 import Photo from '../models/Photo';
 import Product from '../models/Product';
 import ProductUnit from '../models/ProductUnit';
+import Transaction from '../models/Transaction';
 import User from '../models/User';
 
 /*eslint-disable */
@@ -28,6 +29,7 @@ export type Subjects =
       | typeof Photo
       | typeof Brand
       | typeof ProductUnit
+      | typeof Transaction
     >
   | 'all';
 
@@ -46,6 +48,8 @@ export const PermissionBuilder = (user: User) => {
   );
 
   can([Action.Read, Action.ReadOne], [Product, ProductUnit]);
+
+  can([Action.Create, Action.Read, Action.ReadOne], Transaction);
 
   if (user.admin) {
     can(Action.Update, Product);

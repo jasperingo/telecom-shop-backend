@@ -4,6 +4,7 @@ import BrandRouter from './brand-routes';
 import PhotoRouter from './photo-routes';
 import ProductRouter from './product-routes';
 import ProductUnitRouter from './product-unit-routes';
+import TransactionRouter from './transaction-routes';
 import UserRoutes from './user-routes';
 
 const ApiRoutes = express.Router();
@@ -19,5 +20,7 @@ ApiRoutes.use('/photos', PhotoRouter);
 ApiRoutes.use('/brands', BrandRouter);
 
 ApiRoutes.use('/product-units', ProductUnitRouter);
+
+ApiRoutes.use('/transactions', TransactionRouter);
 
 export default ApiRoutes;

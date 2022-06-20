@@ -11,7 +11,8 @@ const ProductUnitController = {
 
       const productUnit = await ProductUnitRepository.findById(result.id);
 
-      res.status(statusCode.CREATED).send(ResponseDTO.success('Product unit created', productUnit));
+      res.status(statusCode.CREATED)
+        .send(ResponseDTO.success('Product unit created', productUnit));
     } catch(error) {
       next(InternalServerError(error));
     }
@@ -27,7 +28,8 @@ const ProductUnitController = {
 
       const productUnit = await ProductUnitRepository.findById(id);
 
-      res.status(statusCode.OK).send(ResponseDTO.success('Product unit updated', productUnit));
+      res.status(statusCode.OK)
+        .send(ResponseDTO.success('Product unit updated', productUnit));
     } catch(error) {
       next(InternalServerError(error));
     }
