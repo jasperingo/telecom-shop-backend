@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import createHttpError from 'http-errors';
-import { InternalServerError } from '../../errors/server-error-handler';
+import { InternalServerError, NotFoundError } from '../../errors/server-error-handler';
 import ProductUnitRepository from '../../repositories/product-unit-repository';
 
 export default async function ProductUnitFetchMiddleware(
@@ -9,13 +8,19 @@ export default async function ProductUnitFetchMiddleware(
   next: NextFunction
 ) {
   try {
+    const id = Number(req.params.id);
+
+    if (isNaN(id)) {
+      return next(NotFoundError(`Product unit with id: ${req.params.id}, not found`));
+    }
+
     const productUnit = await ProductUnitRepository.findById(Number(req.params.id));
 
     if (productUnit !== null) {
       req.data.productUnit = productUnit;
       next();
     } else {
-      next(new createHttpError.NotFound(`Product unit with id: ${req.params.id}, not found`));
+      next(NotFoundError(`Product unit with id: ${req.params.id}, not found`));
     }
   } catch(error) {
     next(InternalServerError(error));
