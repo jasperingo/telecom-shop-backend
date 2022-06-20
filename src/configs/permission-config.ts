@@ -49,7 +49,11 @@ export const PermissionBuilder = (user: User) => {
 
   can([Action.Read, Action.ReadOne], [Product, ProductUnit]);
 
-  can([Action.Create, Action.Read, Action.ReadOne], Transaction);
+  can(Action.Create, Transaction);
+  
+  can(Action.Update, Transaction, ['status'], { userId: user.id });
+
+  can([Action.Read, Action.ReadOne], Transaction, { userId: user.id });
 
   if (user.admin) {
     can(Action.Update, Product);
@@ -57,6 +61,8 @@ export const PermissionBuilder = (user: User) => {
     can(Action.Manage, [Photo, Brand]);
 
     can([Action.Update, Action.Create], ProductUnit);
+    
+    can([Action.Read, Action.ReadOne], Transaction);
 
     can([Action.Read, Action.ReadOne], User, { status: User.STATUS_ACTIVATED });
     

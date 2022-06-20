@@ -29,6 +29,43 @@ const TransactionController = {
     } catch(error) {
       next(InternalServerError(error));
     }
+  },
+
+  async paystackWebhook(req: Request, res: Response, next: NextFunction) {
+    try {
+      if (req.body.event === 'charge.success') {
+        const [affectRows] = await TransactionRepository.updateStatusByReference(
+          req.body.data.reference, 
+          Transaction.STATUS_APPROVED
+        );
+
+        if (affectRows === 0) throw 'Transaction reference do not exist';
+      }
+
+      res.status(statusCode.OK).send({ reference: req.body.data.reference });
+    } catch(error) {
+      next(InternalServerError(error));
+    }
+  },
+
+  async updateStatus(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.data.transaction;
+
+      await TransactionRepository.updateStatus(id, req.body.status);
+
+      const transaction = await TransactionRepository.findById(id);
+
+      res.status(statusCode.OK)
+        .send(ResponseDTO.success('Transaction status updated', transaction));
+    } catch(error) {
+      next(InternalServerError(error));
+    }
+  },
+
+  readOne(req: Request, res: Response) {
+    res.status(statusCode.OK)
+      .send(ResponseDTO.success('Transaction fetched', req.data.transaction));
   }
 };
 

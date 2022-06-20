@@ -34,6 +34,14 @@ const TransactionRepository = {
 
   create({ amount, recipientNumber, reference, status, type, userId, productUnitId }: Transaction) {
     return Transaction.create({ amount, recipientNumber, reference, status, type, userId, productUnitId });
+  },
+
+  updateStatus(id: number, status: string) {
+    return Transaction.update({ status }, { where: { id } });
+  },
+
+  updateStatusByReference(reference: string, status: string) {
+    return Transaction.update({ status }, { where: { reference } });
   }
 };
 
