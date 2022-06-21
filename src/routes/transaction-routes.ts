@@ -8,7 +8,7 @@ import TransactionCreatePermissionMiddleware from '../middlewares/permissions/tr
 import TransactionReadOnePermissionMiddleware from '../middlewares/permissions/transaction/transaction-read-one-permission-middleware';
 import TransactionReadPermissionMiddleware from '../middlewares/permissions/transaction/transaction-read-permission-middleware';
 import TransactionStatusUpdatePermissionMiddleware from '../middlewares/permissions/transaction/transaction-status-update-permission-middleware';
-import TransactionDataPaymentValidatorMiddleware from '../middlewares/validators/transaction/transaction-data-payment-validator-middleware';
+import TransactionDataAndAirtimePaymentValidatorMiddleware from '../middlewares/validators/transaction/transaction-data-and-airtime-payment-validator-middleware';
 import TransactionDepositValidatorMiddleware from '../middlewares/validators/transaction/transaction-deposit-validator-middleware';
 import TransactionStatusUpdateValidatorMiddleware from '../middlewares/validators/transaction/transaction-status-update-validator-middleware';
 
@@ -26,8 +26,16 @@ TransactionRouter.post(
   '/payment/data',
   JwtAuthMiddleware,
   TransactionCreatePermissionMiddleware,
-  TransactionDataPaymentValidatorMiddleware,
+  TransactionDataAndAirtimePaymentValidatorMiddleware,
   TransactionController.dataPayment.bind(TransactionController)
+);
+
+TransactionRouter.post(
+  '/payment/airtime',
+  JwtAuthMiddleware,
+  TransactionCreatePermissionMiddleware,
+  TransactionDataAndAirtimePaymentValidatorMiddleware,
+  TransactionController.airtimePayment.bind(TransactionController)
 );
 
 TransactionRouter.post(

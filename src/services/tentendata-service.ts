@@ -37,7 +37,52 @@ const TentendataService = {
     }
 
     return response.json();
-  }
+  },
+
+  async buyAirtime(network: number, mobile_number: string, amount: number, airtime_type = 'VTU') {
+    const response = await this.call('topup/', 'POST', {
+      amount,
+      network,
+      mobile_number,
+      airtime_type,
+      Ported_number: true
+    });
+
+    if (response.status !== 201) {
+      throw new Error(response.statusText);
+    }
+
+    return response.json();
+  },
+
+  async buyElectricity(disco_name: number, meter_number: string, amount: number, MeterType: string) {
+    const response = await this.call('billpayment/', 'POST', {
+      amount,
+      disco_name,
+      meter_number,
+      MeterType,
+    });
+
+    if (response.status !== 201) {
+      throw new Error(response.statusText);
+    }
+
+    return response.json();
+  },
+
+  async buyCableSubscription(cablename: number, cableplan: number, smart_card_number: string) {
+    const response = await this.call('cablesub/', 'POST', {
+      cablename,
+      cableplan,
+      smart_card_number,
+    });
+
+    if (response.status !== 201) {
+      throw new Error(response.statusText);
+    }
+
+    return response.json();
+  },
 };
 
 export default TentendataService;

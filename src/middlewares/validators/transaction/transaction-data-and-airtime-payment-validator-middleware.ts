@@ -3,6 +3,7 @@ import { checkSchema, Schema, validationResult } from 'express-validator';
 import { ValidationBadRequest } from '../../../errors/validation-error-handler';
 import ProductUnitRepository from '../../../repositories/product-unit-repository';
 import TransactionRepository from '../../../repositories/transaction-repository';
+import TentendataService from '../../../services/tentendata-service';
 import { notEmpty, isNumeric, isMobilePhone, isMobilePhoneLength } from '../validation-contraints';
 
 const schema: Schema = {
@@ -25,6 +26,11 @@ const schema: Schema = {
         if (unit.price > balance) 
           throw 'Field price is above transactions balance';
 
+        const tentenBalance = await TentendataService.getAccountBalance();
+
+        if (unit.price > tentenBalance) 
+          throw 'Field price is above the application transactions balance';
+
         req.data.productUnit = unit;
       }
     }
@@ -39,7 +45,7 @@ const schema: Schema = {
   }
 };
 
-export default async function TransactionDataPaymentValidatorMiddleware(
+export default async function TransactionDataAndAirtimePaymentValidatorMiddleware(
   req: Request, 
   res: Response, 
   next: NextFunction
