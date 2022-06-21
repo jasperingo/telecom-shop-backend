@@ -49,6 +49,29 @@ const TransactionController = {
     }
   },
 
+  async dataPayment(req: Request, res: Response, next: NextFunction) {
+    try {
+      // const reference = await StringGeneratorService.generate(
+      //   TransactionRepository.existsByReference,
+      // ) as string;
+
+      // const result = await TransactionRepository.create({
+      //   reference, 
+      //   amount: req.body.amount,  
+      //   userId: (req.user as User).id,
+      //   type: Transaction.TYPE_DEPOSIT,
+      //   status: Transaction.STATUS_CREATED, 
+      // } as any);
+
+      const transaction = await TransactionRepository.findById(1);
+
+      res.status(statusCode.CREATED)
+        .send(ResponseDTO.success('Transaction created', transaction));
+    } catch(error) {
+      next(InternalServerError(error));
+    }
+  },
+
   async updateStatus(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.data.transaction;

@@ -6,7 +6,7 @@ export const notEmpty = {
 
 export const isNumeric = {
   bail: true,
-  errorMessage: 'Field is invalid',
+  errorMessage: 'This field is invalid',
 };
 
 export const isEmail = {
@@ -21,11 +21,18 @@ export const isMobilePhone = {
 
 export const isBoolean = {
   bail: true,
-  errorMessage: 'Field is invalid',
+  errorMessage: 'This field is invalid',
 };
 
 export const isPasswordLength = {
   bail: true,
   options: { min: 6 },
   errorMessage: 'This field is too short'
+};
+
+
+export const isMobilePhoneLength = {
+  bail: true,
+  options: { max: 11, min: 11 },
+  errorMessage: 'This field is invalid'
 };

@@ -4,6 +4,11 @@ import Photo from '../models/Photo';
 import ProductUnit from '../models/ProductUnit';
 
 const ProductUnitRepository = {
+  async existsById(id: number) {
+    const unit = await ProductUnit.findByPk(id);
+    return unit !== null;
+  },
+
   findById(id: number) {
     return ProductUnit.findByPk(id, {
       include: {

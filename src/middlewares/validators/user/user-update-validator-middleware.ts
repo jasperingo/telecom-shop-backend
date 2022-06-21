@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { checkSchema, Schema, validationResult } from 'express-validator';
 import { ValidationBadRequest } from '../../../errors/validation-error-handler';
 import UserRepository from '../../../repositories/user-repository';
-import { isEmail, isMobilePhone, notEmpty } from '../validation-contraints';
+import { isEmail, isMobilePhone, isMobilePhoneLength, notEmpty } from '../validation-contraints';
 
 const schema: Schema = {
   firstName: { 
@@ -39,6 +39,8 @@ const schema: Schema = {
 
     isMobilePhone,
 
+    isLength: isMobilePhoneLength,
+    
     custom: {
       options: async (value) => {
         if (await UserRepository.existsByPhoneNumber(value))

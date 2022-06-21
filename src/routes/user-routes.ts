@@ -81,4 +81,12 @@ UserRoutes.get(
   UserController.readTransactions.bind(UserController)
 );
 
+UserRoutes.get(
+  '/:id/transactions-balance', 
+  UserFetchMiddleware,
+  JwtAuthMiddleware,
+  UserTransactionsReadPermissionMiddleware,
+  UserController.readTransactionsBalance.bind(UserController)
+);
+
 export default UserRoutes;

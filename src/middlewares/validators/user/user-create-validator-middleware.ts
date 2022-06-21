@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { checkSchema, Schema, validationResult } from 'express-validator';
 import { ValidationBadRequest } from '../../../errors/validation-error-handler';
 import UserRepository from '../../../repositories/user-repository';
-import { isEmail, isMobilePhone, isPasswordLength, notEmpty } from '../validation-contraints';
+import { isEmail, isMobilePhone, isMobilePhoneLength, isPasswordLength, notEmpty } from '../validation-contraints';
 
 const schema: Schema = {
   firstName: { notEmpty },
@@ -26,6 +26,8 @@ const schema: Schema = {
     notEmpty,
 
     isMobilePhone,
+
+    isLength: isMobilePhoneLength,
 
     custom: {
       options: async (value) => {

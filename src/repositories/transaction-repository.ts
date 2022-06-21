@@ -1,4 +1,4 @@
-import { WhereOptions } from 'sequelize';
+import { Op, WhereOptions } from 'sequelize';
 import DatabaseConnection from '../configs/database-config';
 import Brand from '../models/Brand';
 import Photo from '../models/Photo';
@@ -10,6 +10,10 @@ const TransactionRepository = {
   async existsByReference(reference: string) {
     const transaction = await Transaction.findOne({ where: { reference } });
     return transaction !== null;
+  },
+
+  sumAmountByUserIdAndStatus(userId: number, status = Transaction.STATUS_APPROVED) {
+    return Transaction.sum('amount', { where: { userId, status } });
   },
 
   findById(id: number) {
@@ -38,7 +42,7 @@ const TransactionRepository = {
     return DatabaseConnection.transaction(async (transaction) => {
       const [tx, count] = await Promise.all([
         Transaction.findAll({ 
-          where: cursor, 
+          where: { ...cursor, status: { [Op.ne]: Transaction.STATUS_CREATED } }, 
           limit, 
           order: [['createdAt', 'DESC']], 
           transaction,
@@ -55,7 +59,7 @@ const TransactionRepository = {
     return DatabaseConnection.transaction(async (transaction) => {
       const [tx, count] = await Promise.all([
         Transaction.findAll({ 
-          where: { userId, ...cursor }, 
+          where: { userId, ...cursor, status: { [Op.ne]: Transaction.STATUS_CREATED } }, 
           limit, 
           order: [['createdAt', 'DESC']], 
           transaction,

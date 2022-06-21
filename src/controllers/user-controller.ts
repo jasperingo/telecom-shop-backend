@@ -120,6 +120,17 @@ const UserController = {
       next(InternalServerError(error));
     }
   },
+
+  async readTransactionsBalance(req: Request, res: Response, next: NextFunction) {
+    try {
+      const transactionsBalance = await TransactionRepository.sumAmountByUserIdAndStatus(req.data.user.id);
+
+      res.status(statusCode.OK)
+        .send(ResponseDTO.success('Transactions balance fetched', { transactionsBalance }));
+    } catch(error) {
+      next(InternalServerError(error));
+    }
+  },
 };
 
 export default UserController;
