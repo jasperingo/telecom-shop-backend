@@ -10,6 +10,7 @@ import TransactionReadPermissionMiddleware from '../middlewares/permissions/tran
 import TransactionStatusUpdatePermissionMiddleware from '../middlewares/permissions/transaction/transaction-status-update-permission-middleware';
 import TransactionDataAndAirtimePaymentValidatorMiddleware from '../middlewares/validators/transaction/transaction-data-and-airtime-payment-validator-middleware';
 import TransactionDepositValidatorMiddleware from '../middlewares/validators/transaction/transaction-deposit-validator-middleware';
+import TransactionElectricityPaymentValidatorMiddleware from '../middlewares/validators/transaction/transaction-electricity-payment-validator-middleware';
 import TransactionStatusUpdateValidatorMiddleware from '../middlewares/validators/transaction/transaction-status-update-validator-middleware';
 
 const TransactionRouter = express.Router();
@@ -36,6 +37,14 @@ TransactionRouter.post(
   TransactionCreatePermissionMiddleware,
   TransactionDataAndAirtimePaymentValidatorMiddleware,
   TransactionController.airtimePayment.bind(TransactionController)
+);
+
+TransactionRouter.post(
+  '/payment/electricity',
+  JwtAuthMiddleware,
+  TransactionCreatePermissionMiddleware,
+  TransactionElectricityPaymentValidatorMiddleware,
+  TransactionController.electricityPayment.bind(TransactionController)
 );
 
 TransactionRouter.post(
