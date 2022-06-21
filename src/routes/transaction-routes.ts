@@ -8,6 +8,7 @@ import TransactionCreatePermissionMiddleware from '../middlewares/permissions/tr
 import TransactionReadOnePermissionMiddleware from '../middlewares/permissions/transaction/transaction-read-one-permission-middleware';
 import TransactionReadPermissionMiddleware from '../middlewares/permissions/transaction/transaction-read-permission-middleware';
 import TransactionStatusUpdatePermissionMiddleware from '../middlewares/permissions/transaction/transaction-status-update-permission-middleware';
+import TransactionSuperAdminCreatePermissionMiddleware from '../middlewares/permissions/transaction/transaction-super-admin-create-permission-middleware';
 import TransactionCableSubscriptionPaymentValidatorMiddleware from '../middlewares/validators/transaction/transaction-cable-subscription-payment-validator-middleware';
 import TransactionDataAndAirtimePaymentValidatorMiddleware from '../middlewares/validators/transaction/transaction-data-and-airtime-payment-validator-middleware';
 import TransactionDepositValidatorMiddleware from '../middlewares/validators/transaction/transaction-deposit-validator-middleware';
@@ -22,6 +23,14 @@ TransactionRouter.post(
   TransactionCreatePermissionMiddleware,
   TransactionDepositValidatorMiddleware,
   TransactionController.deposit.bind(TransactionController)
+);
+
+TransactionRouter.post(
+  '/super-admin/deposit',
+  JwtAuthMiddleware,
+  TransactionSuperAdminCreatePermissionMiddleware,
+  TransactionDepositValidatorMiddleware,
+  TransactionController.superAdminDeposit.bind(TransactionController)
 );
 
 TransactionRouter.post(

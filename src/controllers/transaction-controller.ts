@@ -35,6 +35,31 @@ const TransactionController = {
     }
   },
 
+  async superAdminDeposit(req: Request, res: Response, next: NextFunction) {
+    try {
+      const reference = await StringGeneratorService.generate(
+        TransactionRepository.existsByReference,
+      ) as string;
+
+      const result = await TransactionRepository.create({
+        reference, 
+        productUnitId: null,
+        recipientNumber: null,
+        amount: req.body.amount,  
+        userId: (req.user as User).id,
+        type: Transaction.TYPE_DEPOSIT,
+        status: Transaction.STATUS_APPROVED, 
+      });
+
+      const transaction = await TransactionRepository.findById(result.id);
+
+      res.status(statusCode.CREATED)
+        .send(ResponseDTO.success('Transaction created', transaction));
+    } catch(error) {
+      next(InternalServerError(error));
+    }
+  },
+
   async paystackWebhook(req: Request, res: Response, next: NextFunction) {
     try {
       if (req.body.event === 'charge.success') {
@@ -171,11 +196,11 @@ const TransactionController = {
         TransactionRepository.existsByReference,
       ) as string;
 
-      // await TentendataService.buyCableSubscription(
-      //   productUnit.brand?.apiCode as number, 
-      //   productUnit.apiCode,
-      //   req.body.smartCardNumber,
-      // );
+      await TentendataService.buyCableSubscription(
+        productUnit.brand?.apiCode as number, 
+        productUnit.apiCode,
+        req.body.smartCardNumber,
+      );
 
       const result = await TransactionRepository.create({
         reference, 

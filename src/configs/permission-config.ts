@@ -36,7 +36,7 @@ export type Subjects =
 export type AppAbility = Ability<[Action, Subjects]>;
 
 export const PermissionBuilder = (user: User) => {
-  const { can, build } = new AbilityBuilder<AppAbility>(
+  const { can, cannot, build } = new AbilityBuilder<AppAbility>(
     Ability as AbilityClass<AppAbility>,
   );
 
@@ -44,7 +44,7 @@ export const PermissionBuilder = (user: User) => {
     [Action.Update, Action.ReadOne], 
     User, 
     ['firstName', 'lastName', 'email', 'phoneNumber', 'password'], 
-    { id: user.id, status: User.STATUS_ACTIVATED }
+    { id: user.id }
   );
 
   can([Action.Read, Action.ReadOne], [Product, ProductUnit]);
@@ -64,13 +64,17 @@ export const PermissionBuilder = (user: User) => {
     
     can([Action.Read, Action.ReadOne], Transaction);
 
-    can([Action.Read, Action.ReadOne], User, { status: User.STATUS_ACTIVATED });
+    can([Action.Read, Action.ReadOne], User);
     
-    can(Action.Update, User, ['status'], { id: { $ne: user.id }, status: User.STATUS_ACTIVATED });
+    can(Action.Update, User, ['status'], { id: { $ne: user.id } });
   }
 
   if (user.admin && user.adminRole === User.ADMIN_ROLE_SUPER) {
     can(Action.Update, User, ['admin'], { id: { $ne: user.id } });
+  }
+
+  if (user.status === User.STATUS_DEACTIVATED) {
+    cannot(Action.Manage, 'all');
   }
 
   return build({
