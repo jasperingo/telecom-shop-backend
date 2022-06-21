@@ -72,7 +72,10 @@ const TransactionRepository = {
     });
   },
 
-  create({ amount, recipientNumber, reference, status, type, userId, productUnitId }: Transaction) {
+  create(
+    { amount, recipientNumber, reference, status, type, userId, productUnitId }: 
+    Pick<Transaction, 'reference' | 'recipientNumber' | 'amount' | 'userId' | 'status' | 'type' | 'productUnitId'>
+  ) {
     return Transaction.create({ amount, recipientNumber, reference, status, type, userId, productUnitId });
   },
 

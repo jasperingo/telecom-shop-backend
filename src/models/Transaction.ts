@@ -11,9 +11,9 @@ class Transaction extends Model<InferAttributes<Transaction>, InferCreationAttri
 
   declare user?: NonAttribute<User>;
 
-  declare productUnitId: ForeignKey<ProductUnit['id']>;
+  declare productUnitId: ForeignKey<ProductUnit['id']> | null;
 
-  declare productUnit?: NonAttribute<ProductUnit>;
+  declare productUnit?: NonAttribute<ProductUnit> | null;
 
   declare reference: string;
 
@@ -23,7 +23,7 @@ class Transaction extends Model<InferAttributes<Transaction>, InferCreationAttri
 
   declare status: string;
 
-  declare recipientNumber: string;
+  declare recipientNumber: string | null;
 
   declare createdAt: CreationOptional<Date>;
 

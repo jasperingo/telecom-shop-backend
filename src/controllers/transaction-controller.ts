@@ -7,6 +7,7 @@ import User from '../models/User';
 import TransactionRepository from '../repositories/transaction-repository';
 import PaginationService from '../services/pagination-service';
 import StringGeneratorService from '../services/string-generator-service';
+import TentendataService from '../services/tentendata-service';
 
 const TransactionController = {
   async deposit(req: Request, res: Response, next: NextFunction) {
@@ -17,11 +18,13 @@ const TransactionController = {
 
       const result = await TransactionRepository.create({
         reference, 
+        productUnitId: null,
+        recipientNumber: null,
         amount: req.body.amount,  
         userId: (req.user as User).id,
         type: Transaction.TYPE_DEPOSIT,
         status: Transaction.STATUS_CREATED, 
-      } as any);
+      });
 
       const transaction = await TransactionRepository.findById(result.id);
 
@@ -51,19 +54,29 @@ const TransactionController = {
 
   async dataPayment(req: Request, res: Response, next: NextFunction) {
     try {
-      // const reference = await StringGeneratorService.generate(
-      //   TransactionRepository.existsByReference,
-      // ) as string;
+      const { productUnit } = req.data;
 
-      // const result = await TransactionRepository.create({
-      //   reference, 
-      //   amount: req.body.amount,  
-      //   userId: (req.user as User).id,
-      //   type: Transaction.TYPE_DEPOSIT,
-      //   status: Transaction.STATUS_CREATED, 
-      // } as any);
+      const reference = await StringGeneratorService.generate(
+        TransactionRepository.existsByReference,
+      ) as string;
 
-      const transaction = await TransactionRepository.findById(1);
+      await TentendataService.buyData(
+        productUnit.brand?.apiCode as number, 
+        req.body.phoneNumber, 
+        productUnit.apiCode
+      );
+
+      const result = await TransactionRepository.create({
+        reference, 
+        amount: -productUnit.price,  
+        userId: (req.user as User).id,
+        type: Transaction.TYPE_PAYMENT,
+        status: Transaction.STATUS_APPROVED, 
+        productUnitId: req.body.productUnitId,
+        recipientNumber: req.body.phoneNumber,
+      });
+
+      const transaction = await TransactionRepository.findById(result.id);
 
       res.status(statusCode.CREATED)
         .send(ResponseDTO.success('Transaction created', transaction));
