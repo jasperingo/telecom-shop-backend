@@ -8,6 +8,7 @@ import TransactionCreatePermissionMiddleware from '../middlewares/permissions/tr
 import TransactionReadOnePermissionMiddleware from '../middlewares/permissions/transaction/transaction-read-one-permission-middleware';
 import TransactionReadPermissionMiddleware from '../middlewares/permissions/transaction/transaction-read-permission-middleware';
 import TransactionStatusUpdatePermissionMiddleware from '../middlewares/permissions/transaction/transaction-status-update-permission-middleware';
+import TransactionCableSubscriptionPaymentValidatorMiddleware from '../middlewares/validators/transaction/transaction-cable-subscription-payment-validator-middleware';
 import TransactionDataAndAirtimePaymentValidatorMiddleware from '../middlewares/validators/transaction/transaction-data-and-airtime-payment-validator-middleware';
 import TransactionDepositValidatorMiddleware from '../middlewares/validators/transaction/transaction-deposit-validator-middleware';
 import TransactionElectricityPaymentValidatorMiddleware from '../middlewares/validators/transaction/transaction-electricity-payment-validator-middleware';
@@ -45,6 +46,14 @@ TransactionRouter.post(
   TransactionCreatePermissionMiddleware,
   TransactionElectricityPaymentValidatorMiddleware,
   TransactionController.electricityPayment.bind(TransactionController)
+);
+
+TransactionRouter.post(
+  '/payment/cable-subscription',
+  JwtAuthMiddleware,
+  TransactionCreatePermissionMiddleware,
+  TransactionCableSubscriptionPaymentValidatorMiddleware,
+  TransactionController.cableSubscriptionPayment.bind(TransactionController)
 );
 
 TransactionRouter.post(

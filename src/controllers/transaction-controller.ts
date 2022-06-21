@@ -163,6 +163,39 @@ const TransactionController = {
     }
   },
 
+  async cableSubscriptionPayment(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { productUnit } = req.data;
+
+      const reference = await StringGeneratorService.generate(
+        TransactionRepository.existsByReference,
+      ) as string;
+
+      // await TentendataService.buyCableSubscription(
+      //   productUnit.brand?.apiCode as number, 
+      //   productUnit.apiCode,
+      //   req.body.smartCardNumber,
+      // );
+
+      const result = await TransactionRepository.create({
+        reference, 
+        amount: -productUnit.price,  
+        userId: (req.user as User).id,
+        type: Transaction.TYPE_PAYMENT,
+        status: Transaction.STATUS_APPROVED, 
+        productUnitId: req.body.productUnitId,
+        recipientNumber: req.body.smartCardNumber,
+      });
+
+      const transaction = await TransactionRepository.findById(result.id);
+
+      res.status(statusCode.CREATED)
+        .send(ResponseDTO.success('Transaction created', transaction));
+    } catch(error) {
+      next(InternalServerError(error));
+    }
+  },
+
   async updateStatus(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.data.transaction;
