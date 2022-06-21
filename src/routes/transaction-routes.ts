@@ -3,6 +3,7 @@ import TransactionController from '../controllers/transaction-controller';
 import JwtAuthMiddleware from '../middlewares/auth/jwt-auth-middleware';
 import PaystackAuthMiddleware from '../middlewares/auth/paystack-auth-middleware';
 import TransactionFetchMiddleware from '../middlewares/fetch/transaction-fetch-middleware';
+import TentenAccountBalanceReadPermissionMiddleware from '../middlewares/permissions/transaction/tenten-account-balance-read-permission-middleware';
 import TransactionCreatePermissionMiddleware from '../middlewares/permissions/transaction/transaction-create-permission-middleware';
 import TransactionReadOnePermissionMiddleware from '../middlewares/permissions/transaction/transaction-read-one-permission-middleware';
 import TransactionReadPermissionMiddleware from '../middlewares/permissions/transaction/transaction-read-permission-middleware';
@@ -42,6 +43,13 @@ TransactionRouter.put(
   TransactionStatusUpdatePermissionMiddleware,
   TransactionStatusUpdateValidatorMiddleware,
   TransactionController.updateStatus.bind(TransactionController)
+);
+
+TransactionRouter.get(
+  '/tenten-account-balance',
+  JwtAuthMiddleware,
+  TentenAccountBalanceReadPermissionMiddleware,
+  TransactionController.readTentenAccountBalance.bind(TransactionController)
 );
 
 TransactionRouter.get(

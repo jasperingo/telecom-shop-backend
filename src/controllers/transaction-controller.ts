@@ -52,6 +52,17 @@ const TransactionController = {
     }
   },
 
+  async readTentenAccountBalance(req: Request, res: Response, next: NextFunction) {
+    try {
+      const transactionsBalance = await TentendataService.getAccountBalance();
+
+      res.status(statusCode.OK)
+        .send(ResponseDTO.success('Transactions balance fetched', { transactionsBalance }));
+    } catch(error) {
+      next(InternalServerError(error));
+    }
+  },
+
   async dataPayment(req: Request, res: Response, next: NextFunction) {
     try {
       const { productUnit } = req.data;

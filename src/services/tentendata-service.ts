@@ -12,6 +12,18 @@ const TentendataService = {
     });
   },
 
+  async getAccountBalance() {
+    const response = await this.call('user/', 'GET');
+
+    if (response.status !== 200) {
+      throw new Error(response.statusText);
+    }
+
+    const data = await response.json() as any;
+
+    return data.user.Account_Balance as number;
+  },
+
   async buyData(network: number, mobile_number: string, plan: number) {
     const response = await this.call('data/', 'POST', {
       plan,
