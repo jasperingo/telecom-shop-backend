@@ -14,6 +14,11 @@ const UserRepository = {
     return user !== null;
   },
 
+  async existsByPasswordResetToken(passwordResetToken: string) {
+    const user = await User.findOne({ where: { passwordResetToken } });
+    return user !== null;
+  },
+
   findById(id: number) {
     return User.findByPk(id);
   },
@@ -78,6 +83,9 @@ const UserRepository = {
     );
   },
 
+  updatePasswordResetToken(id: number, passwordResetToken: string) {
+    return User.update({ passwordResetToken }, { where: { id } });
+  },
 };
 
 export default UserRepository;
