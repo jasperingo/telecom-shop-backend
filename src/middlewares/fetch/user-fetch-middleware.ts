@@ -4,13 +4,11 @@ import { InternalServerError, NotFoundError } from '../../errors/server-error-ha
 
 export default async function UserFetchMiddleware(req: Request, res: Response, next: NextFunction) {
   try {
-    const id = Number(req.params.id);
+    const id = req.params.id;
 
-    if (isNaN(id)) {
-      return next(NotFoundError(`User with id: ${req.params.id}, not found`));
-    }
-
-    const user = await UserRepository.findById(id);
+    const user = isNaN(Number(id)) 
+      ? await UserRepository.findByEmail(id)
+      : await UserRepository.findById(Number(id));
 
     if (user !== null) {
       req.data.user = user;
