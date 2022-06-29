@@ -84,7 +84,7 @@ const TransactionController = {
         else if (
           transaction.type !== Transaction.TYPE_DEPOSIT || 
           transaction.depositMethod !== Transaction.DEPOSIT_METHOD_PAYSTACK ||
-          transaction.total !== req.body.data.amount
+          (transaction.total * 100) !== req.body.data.amount
         )
           throw 'Transaction is invalid';
   
