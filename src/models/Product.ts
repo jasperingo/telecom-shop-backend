@@ -12,6 +12,14 @@ class Product extends Model<InferAttributes<Product>, InferCreationAttributes<Pr
   declare available: boolean;
 
   declare createdAt: CreationOptional<Date>;
+
+  static readonly TYPE_DATA = 1;
+
+  static readonly TYPE_AIRTIME = 2;
+
+  static readonly TYPE_CABLE = 3;
+
+  static readonly TYPE_ELECTRICITY = 4;
 }
 
 Product.init({

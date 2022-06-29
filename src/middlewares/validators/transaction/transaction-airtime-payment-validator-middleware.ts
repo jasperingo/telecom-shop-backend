@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { checkSchema, Schema, validationResult } from 'express-validator';
 import { ValidationBadRequest } from '../../../errors/validation-error-handler';
+import Product from '../../../models/Product';
 import ProductUnitRepository from '../../../repositories/product-unit-repository';
 import TransactionRepository from '../../../repositories/transaction-repository';
 import TentendataService from '../../../services/tentendata-service';
@@ -20,6 +21,8 @@ const schema: Schema = {
           throw 'Field is invalid';
         else if (!unit.available)
           throw 'Field is unavailable';
+        else if (unit.productId !== Product.TYPE_AIRTIME)
+          throw 'Field is invalid';
 
         const balance = await TransactionRepository.sumAmountByUserIdAndStatus(req.user.id);
         
@@ -45,7 +48,7 @@ const schema: Schema = {
   }
 };
 
-export default async function TransactionDataAndAirtimePaymentValidatorMiddleware(
+export default async function TransactionAirtimePaymentValidatorMiddleware(
   req: Request, 
   res: Response, 
   next: NextFunction

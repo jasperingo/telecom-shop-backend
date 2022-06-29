@@ -5,7 +5,7 @@ import Product from '../../../models/Product';
 import ProductUnitRepository from '../../../repositories/product-unit-repository';
 import TransactionRepository from '../../../repositories/transaction-repository';
 import TentendataService from '../../../services/tentendata-service';
-import { notEmpty, isNumeric } from '../validation-contraints';
+import { notEmpty, isNumeric, isMobilePhone, isMobilePhoneLength } from '../validation-contraints';
 
 const schema: Schema = {
   productUnitId: { 
@@ -21,7 +21,7 @@ const schema: Schema = {
           throw 'Field is invalid';
         else if (!unit.available)
           throw 'Field is unavailable';
-        else if (unit.productId !== Product.TYPE_CABLE)
+        else if (unit.productId !== Product.TYPE_DATA)
           throw 'Field is invalid';
 
         const balance = await TransactionRepository.sumAmountByUserIdAndStatus(req.user.id);
@@ -39,10 +39,16 @@ const schema: Schema = {
     }
   },
 
-  smartCardNumber: { notEmpty }
+  phoneNumber: {
+    notEmpty,
+
+    isMobilePhone,
+
+    isLength: isMobilePhoneLength,
+  }
 };
 
-export default async function TransactionCableSubscriptionPaymentValidatorMiddleware(
+export default async function TransactionDataPaymentValidatorMiddleware(
   req: Request, 
   res: Response, 
   next: NextFunction

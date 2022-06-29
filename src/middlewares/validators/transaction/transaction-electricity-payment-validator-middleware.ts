@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { checkSchema, Schema, validationResult } from 'express-validator';
 import { ValidationBadRequest } from '../../../errors/validation-error-handler';
+import Product from '../../../models/Product';
 import ProductUnitRepository from '../../../repositories/product-unit-repository';
 import TransactionRepository from '../../../repositories/transaction-repository';
 import TentendataService from '../../../services/tentendata-service';
@@ -19,7 +20,9 @@ const schema: Schema = {
         if (unit === null) 
           throw 'Field is invalid';
         else if (!unit.available)
-          throw 'Field is unavailable';
+          throw 'Field is unavailable';  
+        else if (unit.productId !== Product.TYPE_ELECTRICITY)
+          throw 'Field is invalid';
 
         const balance = await TransactionRepository.sumAmountByUserIdAndStatus(req.user.id);
         

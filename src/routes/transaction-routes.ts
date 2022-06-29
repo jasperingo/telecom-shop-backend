@@ -10,7 +10,8 @@ import TransactionReadPermissionMiddleware from '../middlewares/permissions/tran
 import TransactionStatusUpdatePermissionMiddleware from '../middlewares/permissions/transaction/transaction-status-update-permission-middleware';
 import TransactionAdminCreatePermissionMiddleware from '../middlewares/permissions/transaction/transaction-admin-create-permission-middleware';
 import TransactionCableSubscriptionPaymentValidatorMiddleware from '../middlewares/validators/transaction/transaction-cable-subscription-payment-validator-middleware';
-import TransactionDataAndAirtimePaymentValidatorMiddleware from '../middlewares/validators/transaction/transaction-data-and-airtime-payment-validator-middleware';
+import TransactionDataPaymentValidatorMiddleware from '../middlewares/validators/transaction/transaction-data-payment-validator-middleware';
+import TransactionAirtimePaymentValidatorMiddleware from '../middlewares/validators/transaction/transaction-airtime-payment-validator-middleware';
 import TransactionDepositValidatorMiddleware from '../middlewares/validators/transaction/transaction-deposit-validator-middleware';
 import TransactionElectricityPaymentValidatorMiddleware from '../middlewares/validators/transaction/transaction-electricity-payment-validator-middleware';
 import TransactionStatusUpdateValidatorMiddleware from '../middlewares/validators/transaction/transaction-status-update-validator-middleware';
@@ -38,7 +39,7 @@ TransactionRouter.post(
   '/payment/data',
   JwtAuthMiddleware,
   TransactionCreatePermissionMiddleware,
-  TransactionDataAndAirtimePaymentValidatorMiddleware,
+  TransactionDataPaymentValidatorMiddleware,
   TransactionController.dataPayment.bind(TransactionController)
 );
 
@@ -46,7 +47,7 @@ TransactionRouter.post(
   '/payment/airtime',
   JwtAuthMiddleware,
   TransactionCreatePermissionMiddleware,
-  TransactionDataAndAirtimePaymentValidatorMiddleware,
+  TransactionAirtimePaymentValidatorMiddleware,
   TransactionController.airtimePayment.bind(TransactionController)
 );
 
