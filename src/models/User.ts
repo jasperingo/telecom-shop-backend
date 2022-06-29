@@ -21,7 +21,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
 
   declare adminRole: string | null;
 
-  declare passwordResetToken: CreationOptional<string>;
+  declare passwordResetToken: CreationOptional<string | null>;
 
   declare createdAt: CreationOptional<Date>;
 

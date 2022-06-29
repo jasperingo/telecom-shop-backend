@@ -27,6 +27,10 @@ const UserRepository = {
     return User.findOne({ where: { email } });
   },
 
+  findByPasswordResetToken(passwordResetToken: string) {
+    return User.findOne({ where: { passwordResetToken } });
+  },
+
   findAll(cursor: WhereOptions<User>, limit: number) {
     return DatabaseConnection.transaction(async (transaction) => {
       const [users, count] = await Promise.all([
@@ -83,7 +87,7 @@ const UserRepository = {
     );
   },
 
-  updatePasswordResetToken(id: number, passwordResetToken: string) {
+  updatePasswordResetToken(id: number, passwordResetToken: string | null) {
     return User.update({ passwordResetToken }, { where: { id } });
   },
 };

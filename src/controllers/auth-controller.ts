@@ -4,6 +4,7 @@ import { InternalServerError } from '../errors/server-error-handler';
 import User from '../models/User';
 import UserRepository from '../repositories/user-repository';
 import EmailingService from '../services/emailing-service';
+import HashService from '../services/hash-service';
 import JWTService from '../services/jwt-service';
 import StringGeneratorService from '../services/string-generator-service';
 
@@ -39,6 +40,22 @@ const AuthController = {
       await EmailingService.sendResetPasswordToken(user.email, token);
 
       res.send(ResponseDTO.success('Forgot password created'));
+    } catch(error) {
+      next(InternalServerError(error));
+    }
+  },
+
+  async resetPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { user } = req.data;
+
+      const password = await HashService.hashPassword(req.body.password);
+
+      await UserRepository.updatePassword(user.id, password);
+
+      await UserRepository.updatePasswordResetToken(user.id, null);
+
+      res.send(ResponseDTO.success('Password reset'));
     } catch(error) {
       next(InternalServerError(error));
     }
