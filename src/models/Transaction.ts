@@ -19,13 +19,19 @@ class Transaction extends Model<InferAttributes<Transaction>, InferCreationAttri
 
   declare amount: number;
 
+  declare fee: number;
+
   declare type: string;
 
   declare status: string;
 
   declare recipientNumber: string | null;
 
+  declare depositMethod: string | null;
+
   declare createdAt: CreationOptional<Date>;
+
+  declare total: CreationOptional<number>;
 
   static readonly TYPE_DEPOSIT = 'deposit';
 
@@ -38,6 +44,12 @@ class Transaction extends Model<InferAttributes<Transaction>, InferCreationAttri
   static readonly STATUS_FAILED = 'failed';
 
   static readonly STATUS_APPROVED = 'approved';
+
+  static readonly DEPOSIT_METHOD_DIRECT = 'direct';
+
+  static readonly DEPOSIT_METHOD_PAYSTACK = 'paystack';
+
+  static readonly PAYSTACK_FEE = { threshold: 2500, min: 12.5, max: 32.5 };
 
   static getTypes() {
     return [
@@ -52,6 +64,13 @@ class Transaction extends Model<InferAttributes<Transaction>, InferCreationAttri
       Transaction.STATUS_CREATED,
       Transaction.STATUS_FAILED,
       Transaction.STATUS_PENDING,
+    ];
+  }
+
+  static getDepositMethods() {
+    return [
+      Transaction.DEPOSIT_METHOD_DIRECT,
+      Transaction.DEPOSIT_METHOD_PAYSTACK,
     ];
   }
 }
@@ -71,7 +90,12 @@ Transaction.init({
   },
 
   amount: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.DOUBLE,
+    allowNull: false,
+  },
+
+  fee: { 
+    type: DataTypes.DOUBLE,
     allowNull: false,
   },
 
@@ -90,11 +114,24 @@ Transaction.init({
     field: 'recipient_number',
   },
 
+  depositMethod: {
+    type: DataTypes.ENUM(...Transaction.getDepositMethods()),
+    field: 'deposit_method',
+  },
+
   createdAt: {
     type: DataTypes.DATE,
     field: 'created_at',
-  }
+  },
 
+  total: {
+    type: DataTypes.VIRTUAL,
+    get() {
+      const fee = this.getDataValue('fee');
+      const amount = this.getDataValue('amount');
+      return amount + fee;
+    }
+  },
 },
 {
   tableName: 'transactions',

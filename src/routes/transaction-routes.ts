@@ -8,12 +8,13 @@ import TransactionCreatePermissionMiddleware from '../middlewares/permissions/tr
 import TransactionReadOnePermissionMiddleware from '../middlewares/permissions/transaction/transaction-read-one-permission-middleware';
 import TransactionReadPermissionMiddleware from '../middlewares/permissions/transaction/transaction-read-permission-middleware';
 import TransactionStatusUpdatePermissionMiddleware from '../middlewares/permissions/transaction/transaction-status-update-permission-middleware';
-import TransactionSuperAdminCreatePermissionMiddleware from '../middlewares/permissions/transaction/transaction-super-admin-create-permission-middleware';
+import TransactionAdminCreatePermissionMiddleware from '../middlewares/permissions/transaction/transaction-admin-create-permission-middleware';
 import TransactionCableSubscriptionPaymentValidatorMiddleware from '../middlewares/validators/transaction/transaction-cable-subscription-payment-validator-middleware';
 import TransactionDataAndAirtimePaymentValidatorMiddleware from '../middlewares/validators/transaction/transaction-data-and-airtime-payment-validator-middleware';
 import TransactionDepositValidatorMiddleware from '../middlewares/validators/transaction/transaction-deposit-validator-middleware';
 import TransactionElectricityPaymentValidatorMiddleware from '../middlewares/validators/transaction/transaction-electricity-payment-validator-middleware';
 import TransactionStatusUpdateValidatorMiddleware from '../middlewares/validators/transaction/transaction-status-update-validator-middleware';
+import TransactionAdminDepositValidatorMiddleware from '../middlewares/validators/transaction/transaction-admin-deposit-validator-middleware';
 
 const TransactionRouter = express.Router();
 
@@ -26,11 +27,11 @@ TransactionRouter.post(
 );
 
 TransactionRouter.post(
-  '/super-admin/deposit',
+  '/admin/deposit',
   JwtAuthMiddleware,
-  TransactionSuperAdminCreatePermissionMiddleware,
-  TransactionDepositValidatorMiddleware,
-  TransactionController.superAdminDeposit.bind(TransactionController)
+  TransactionAdminCreatePermissionMiddleware,
+  TransactionAdminDepositValidatorMiddleware,
+  TransactionController.adminDeposit.bind(TransactionController)
 );
 
 TransactionRouter.post(
@@ -85,6 +86,11 @@ TransactionRouter.get(
   JwtAuthMiddleware,
   TentenAccountBalanceReadPermissionMiddleware,
   TransactionController.readTentenAccountBalance.bind(TransactionController)
+);
+
+TransactionRouter.get(
+  '/paystack-fee',
+  TransactionController.readPaystackFee.bind(TransactionController)
 );
 
 TransactionRouter.get(

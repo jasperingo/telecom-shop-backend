@@ -38,6 +38,29 @@ const TransactionRepository = {
     });
   },
 
+  findByReference(reference: string) {
+    return Transaction.findOne({
+      where: { reference },
+      include: [
+        {
+          model: ProductUnit,
+          as: 'productUnit',
+          include: [
+            {
+              model: Brand,
+              include: [
+                { model: Photo }
+              ]
+            }
+          ],
+        },
+        {
+          model: User
+        }
+      ]
+    });
+  },
+
   findAll(cursor: WhereOptions<Transaction>, limit: number) {
     return DatabaseConnection.transaction(async (transaction) => {
       const [tx, count] = await Promise.all([
@@ -73,19 +96,18 @@ const TransactionRepository = {
   },
 
   create(
-    { amount, recipientNumber, reference, status, type, userId, productUnitId }: 
-    Pick<Transaction, 'reference' | 'recipientNumber' | 'amount' | 'userId' | 'status' | 'type' | 'productUnitId'>
+    { amount, fee, recipientNumber, reference, status, type, userId, productUnitId, depositMethod }: 
+    Pick<
+      Transaction, 
+      'reference' | 'recipientNumber' | 'amount' | 'fee' | 'userId' | 'status' | 'type' | 'productUnitId' | 'depositMethod'
+    >
   ) {
-    return Transaction.create({ amount, recipientNumber, reference, status, type, userId, productUnitId });
+    return Transaction.create({ amount, fee, recipientNumber, reference, status, type, userId, productUnitId, depositMethod });
   },
 
   updateStatus(id: number, status: string) {
     return Transaction.update({ status }, { where: { id } });
   },
-
-  updateStatusByReference(reference: string, status: string) {
-    return Transaction.update({ status }, { where: { reference } });
-  }
 };
 
 export default TransactionRepository;

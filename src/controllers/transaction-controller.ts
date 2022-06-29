@@ -10,20 +10,32 @@ import StringGeneratorService from '../services/string-generator-service';
 import TentendataService from '../services/tentendata-service';
 
 const TransactionController = {
+
+  readPaystackFee(req: Request, res: Response) {
+    res.status(statusCode.OK)
+        .send(ResponseDTO.success('Paystack fee fetched', Transaction.PAYSTACK_FEE));
+  },
+
   async deposit(req: Request, res: Response, next: NextFunction) {
     try {
       const reference = await StringGeneratorService.generate(
         TransactionRepository.existsByReference,
       ) as string;
 
+      const amount = req.body.amount;
+
       const result = await TransactionRepository.create({
+        amount,  
         reference, 
         productUnitId: null,
         recipientNumber: null,
-        amount: req.body.amount,  
         userId: (req.user as User).id,
         type: Transaction.TYPE_DEPOSIT,
         status: Transaction.STATUS_CREATED, 
+        depositMethod: Transaction.DEPOSIT_METHOD_PAYSTACK,
+        fee: amount <= Transaction.PAYSTACK_FEE.threshold 
+          ? Transaction.PAYSTACK_FEE.min 
+          : Transaction.PAYSTACK_FEE.max,
       });
 
       const transaction = await TransactionRepository.findById(result.id);
@@ -35,20 +47,22 @@ const TransactionController = {
     }
   },
 
-  async superAdminDeposit(req: Request, res: Response, next: NextFunction) {
+  async adminDeposit(req: Request, res: Response, next: NextFunction) {
     try {
       const reference = await StringGeneratorService.generate(
         TransactionRepository.existsByReference,
       ) as string;
 
       const result = await TransactionRepository.create({
+        fee: 0,
         reference, 
         productUnitId: null,
         recipientNumber: null,
         amount: req.body.amount,  
-        userId: (req.user as User).id,
+        userId: req.data.user.id,
         type: Transaction.TYPE_DEPOSIT,
         status: Transaction.STATUS_APPROVED, 
+        depositMethod: Transaction.DEPOSIT_METHOD_DIRECT,
       });
 
       const transaction = await TransactionRepository.findById(result.id);
@@ -63,12 +77,18 @@ const TransactionController = {
   async paystackWebhook(req: Request, res: Response, next: NextFunction) {
     try {
       if (req.body.event === 'charge.success') {
-        const [affectRows] = await TransactionRepository.updateStatusByReference(
-          req.body.data.reference, 
-          Transaction.STATUS_APPROVED
-        );
+        const transaction = await TransactionRepository.findByReference(req.body.data.reference);
 
-        if (affectRows === 0) throw 'Transaction reference do not exist';
+        if (transaction === null) 
+          throw 'Transaction reference do not exist';
+        else if (
+          transaction.type !== Transaction.TYPE_DEPOSIT || 
+          transaction.depositMethod !== Transaction.DEPOSIT_METHOD_PAYSTACK ||
+          transaction.total !== req.body.data.amount
+        )
+          throw 'Transaction is invalid';
+  
+        await TransactionRepository.updateStatus(transaction.id, Transaction.STATUS_APPROVED);
       }
 
       res.status(statusCode.OK).send({ reference: req.body.data.reference });
@@ -104,6 +124,8 @@ const TransactionController = {
 
       const result = await TransactionRepository.create({
         reference, 
+        fee: 0,
+        depositMethod: null,
         amount: -productUnit.price,  
         userId: (req.user as User).id,
         type: Transaction.TYPE_PAYMENT,
@@ -137,6 +159,8 @@ const TransactionController = {
 
       const result = await TransactionRepository.create({
         reference, 
+        fee: 0,
+        depositMethod: null,
         amount: -productUnit.price,  
         userId: (req.user as User).id,
         type: Transaction.TYPE_PAYMENT,
@@ -171,6 +195,8 @@ const TransactionController = {
 
       const result = await TransactionRepository.create({
         reference, 
+        fee: 0,
+        depositMethod: null,
         amount: -productUnit.price,  
         userId: (req.user as User).id,
         type: Transaction.TYPE_PAYMENT,
@@ -204,6 +230,8 @@ const TransactionController = {
 
       const result = await TransactionRepository.create({
         reference, 
+        fee: 0,
+        depositMethod: null,
         amount: -productUnit.price,  
         userId: (req.user as User).id,
         type: Transaction.TYPE_PAYMENT,

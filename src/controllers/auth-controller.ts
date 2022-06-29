@@ -15,6 +15,7 @@ const AuthController = {
         accessToken,
         type: 'Bearer',
         userId: user.id,
+        userIsAdmin: user.admin,
       }));
     } catch(error) {
       next(InternalServerError(error));
