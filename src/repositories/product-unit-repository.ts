@@ -1,3 +1,4 @@
+import Product from '../models/Product';
 import DatabaseConnection from '../configs/database-config';
 import Brand from '../models/Brand';
 import Photo from '../models/Photo';
@@ -11,12 +12,17 @@ const ProductUnitRepository = {
 
   findById(id: number) {
     return ProductUnit.findByPk(id, {
-      include: {
-        model: Brand,
-        include: [
-          { model: Photo }
-        ]
-      },
+      include: [
+        {
+          model: Brand,
+          include: [
+            { model: Photo }
+          ]
+        },
+        {
+          model: Product,
+        }
+      ]
     });
   },
 
@@ -24,12 +30,17 @@ const ProductUnitRepository = {
     return DatabaseConnection.transaction(async (transaction) => {
       const [productUnits, count] = await Promise.all([
         ProductUnit.findAll({ 
-          include: {
-            model: Brand,
-            include: [
-              { model: Photo }
-            ],
-          }, 
+          include: [
+            {
+              model: Brand,
+              include: [
+                { model: Photo }
+              ],
+            },
+            {
+              model: Product,
+            },
+          ],
           transaction,
         }),
         ProductUnit.count({ transaction }),
@@ -44,12 +55,17 @@ const ProductUnitRepository = {
       const [productUnits, count] = await Promise.all([
         ProductUnit.findAll({ 
           where: { productId },
-          include: {
-            model: Brand,
-            include: [
-              { model: Photo }
-            ],
-          }, 
+          include: [
+            {
+              model: Brand,
+              include: [
+                { model: Photo }
+              ],
+            },
+            {
+              model: Product,
+            }
+          ], 
           transaction,
         }),
         ProductUnit.count({ where: { productId }, transaction }),

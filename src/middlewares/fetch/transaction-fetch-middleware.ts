@@ -8,13 +8,11 @@ export default async function TransactionFetchMiddleware(
   next: NextFunction
 ) {
   try {
-    const id = Number(req.params.id);
+    const id = req.params.id;
 
-    if (isNaN(id)) {
-      return next(NotFoundError(`Transaction with id: ${req.params.id}, not found`));
-    }
-
-    const transaction = await TransactionRepository.findById(id);
+    const transaction = isNaN(Number(id)) 
+      ? await TransactionRepository.findByReference(id)
+      : await TransactionRepository.findById(Number(id));
 
     if (transaction !== null) {
       req.data.transaction = transaction;

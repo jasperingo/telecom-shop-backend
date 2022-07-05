@@ -25,7 +25,10 @@ const BrandRepository = {
   findAll() {
     return DatabaseConnection.transaction(async (transaction) => {
       const [brands, count] = await Promise.all([
-        Brand.findAll({ transaction }),
+        Brand.findAll({ 
+          include: { model: Photo }, 
+          transaction 
+        }),
         Brand.count({ transaction }),
       ]);
 

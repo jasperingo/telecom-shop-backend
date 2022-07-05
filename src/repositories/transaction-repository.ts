@@ -1,4 +1,5 @@
 import { Op, WhereOptions } from 'sequelize';
+import Product from '../models/Product';
 import DatabaseConnection from '../configs/database-config';
 import Brand from '../models/Brand';
 import Photo from '../models/Photo';
@@ -12,8 +13,9 @@ const TransactionRepository = {
     return transaction !== null;
   },
 
-  sumAmountByUserIdAndStatus(userId: number, status = Transaction.STATUS_APPROVED) {
-    return Transaction.sum('amount', { where: { userId, status } });
+  async sumAmountByUserIdAndStatus(userId: number, status = Transaction.STATUS_APPROVED) {
+    const sum = await Transaction.sum('amount', { where: { userId, status } });
+    return sum ?? 0;
   },
 
   findById(id: number) {
@@ -28,6 +30,9 @@ const TransactionRepository = {
               include: [
                 { model: Photo }
               ]
+            },
+            {
+              model: Product
             }
           ],
         },
@@ -51,6 +56,9 @@ const TransactionRepository = {
               include: [
                 { model: Photo }
               ]
+            },
+            {
+              model: Product
             }
           ],
         },
