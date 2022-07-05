@@ -53,6 +53,8 @@ class Transaction extends Model<InferAttributes<Transaction>, InferCreationAttri
 
   static readonly MINIMIUM_DEPOSIT_AMOUNT = 500.00;
 
+  static readonly REFERENCE_LENGTH = 10;
+
   static getTypes() {
     return [
       Transaction.TYPE_DEPOSIT,

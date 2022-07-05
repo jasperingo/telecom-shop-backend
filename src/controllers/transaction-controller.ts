@@ -10,17 +10,26 @@ import StringGeneratorService from '../services/string-generator-service';
 import TentendataService from '../services/tentendata-service';
 
 const TransactionController = {
-
   readPaystackFee(req: Request, res: Response) {
     res.status(statusCode.OK)
         .send(ResponseDTO.success('Paystack fee fetched', Transaction.PAYSTACK_FEE));
   },
 
+  generateReference() {
+    return StringGeneratorService.generate(
+      TransactionRepository.existsByReference,
+      {
+        capitalization: 'uppercase',
+        length: Transaction.REFERENCE_LENGTH,
+      },
+      3,
+      'RYS_'
+    ) as Promise<string>;
+  },
+
   async deposit(req: Request, res: Response, next: NextFunction) {
     try {
-      const reference = await StringGeneratorService.generate(
-        TransactionRepository.existsByReference,
-      ) as string;
+      const reference = await this.generateReference();
 
       const amount = req.body.amount;
 
@@ -49,9 +58,7 @@ const TransactionController = {
 
   async adminDeposit(req: Request, res: Response, next: NextFunction) {
     try {
-      const reference = await StringGeneratorService.generate(
-        TransactionRepository.existsByReference,
-      ) as string;
+      const reference = await this.generateReference();
 
       const result = await TransactionRepository.create({
         fee: 0,
@@ -79,14 +86,15 @@ const TransactionController = {
       if (req.body.event === 'charge.success') {
         const transaction = await TransactionRepository.findByReference(req.body.data.reference);
 
-        if (transaction === null) 
+        if (transaction === null) {
           throw 'Transaction reference do not exist';
-        else if (
+        } else if (
           transaction.type !== Transaction.TYPE_DEPOSIT || 
           transaction.depositMethod !== Transaction.DEPOSIT_METHOD_PAYSTACK ||
           (transaction.total * 100) !== req.body.data.amount
-        )
+        ) {
           throw 'Transaction is invalid';
+        }
   
         await TransactionRepository.updateStatus(transaction.id, Transaction.STATUS_APPROVED);
       }
@@ -112,9 +120,7 @@ const TransactionController = {
     try {
       const { productUnit } = req.data;
 
-      const reference = await StringGeneratorService.generate(
-        TransactionRepository.existsByReference,
-      ) as string;
+      const reference = await this.generateReference();
 
       await TentendataService.buyData(
         productUnit.brand?.apiCode as number, 
@@ -147,9 +153,7 @@ const TransactionController = {
     try {
       const { productUnit } = req.data;
 
-      const reference = await StringGeneratorService.generate(
-        TransactionRepository.existsByReference,
-      ) as string;
+      const reference = await this.generateReference();
 
       await TentendataService.buyAirtime(
         productUnit.brand?.apiCode as number, 
@@ -182,9 +186,7 @@ const TransactionController = {
     try {
       const { productUnit } = req.data;
 
-      const reference = await StringGeneratorService.generate(
-        TransactionRepository.existsByReference,
-      ) as string;
+      const reference = await this.generateReference();
 
       await TentendataService.buyElectricity(
         productUnit.brand?.apiCode as number, 
@@ -218,9 +220,7 @@ const TransactionController = {
     try {
       const { productUnit } = req.data;
 
-      const reference = await StringGeneratorService.generate(
-        TransactionRepository.existsByReference,
-      ) as string;
+      const reference = await this.generateReference();
 
       await TentendataService.buyCableSubscription(
         productUnit.brand?.apiCode as number, 

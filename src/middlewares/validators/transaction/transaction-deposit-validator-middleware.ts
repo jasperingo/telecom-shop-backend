@@ -2,14 +2,15 @@ import { NextFunction, Request, Response } from 'express';
 import { checkSchema, Schema, validationResult } from 'express-validator';
 import { ValidationBadRequest } from '../../../errors/validation-error-handler';
 import { notEmpty } from '../validation-contraints';
+import Transaction from '../../../models/Transaction';
 
 const schema: Schema = {
   amount: { 
     notEmpty,
 
     isFloat: {
-      options: { min: 500 },
-      errorMessage: 'Field should be a number not less than 500',
+      options: { min: Transaction.MINIMIUM_DEPOSIT_AMOUNT },
+      errorMessage: `Field should be a number not less than ${Transaction.MINIMIUM_DEPOSIT_AMOUNT}`,
     }
   }
 };
