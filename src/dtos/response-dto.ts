@@ -1,11 +1,12 @@
+import type PaginationDto from './pagination-dto';
+
 export default class ResponseDTO {
-  
   /*eslint-disable */
   constructor(
     public status: 'error' | 'success',
     public message?: string, 
     public data?: any, 
-    public metaData?: any
+    public metaData?: { pagination: PaginationDto; }
   ) {}
 
   static error(message: string, data?: any) {

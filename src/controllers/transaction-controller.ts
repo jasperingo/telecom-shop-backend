@@ -271,11 +271,11 @@ const TransactionController = {
 
   async read(req: Request, res: Response, next: NextFunction) {
     try {
-      const { limit, cursor } = PaginationService.getCursor(req);
+      const { page, pageLimit, pageOffset } = PaginationService.getParams(req);
 
-      const { transactions, count } = await TransactionRepository.findAll(cursor, limit);
+      const { transactions, count } = await TransactionRepository.findAll(pageOffset, pageLimit);
 
-      const pagination = PaginationService.getResponse(count, transactions, req);
+      const pagination = PaginationService.getResponse(page, pageLimit, count, transactions.length);
 
       res.status(statusCode.OK)
         .send(ResponseDTO.success('Transaction fetched', transactions, { pagination }));

@@ -57,7 +57,7 @@ const BrandController = {
     try {
       const { brands, count } = await BrandRepository.findAll();
 
-      const pagination = PaginationService.getResponse(count, brands, req);
+      const pagination = PaginationService.getResponse(1, brands.length, count, brands.length);
 
       res.status(statusCode.OK)
         .send(ResponseDTO.success('Brands fetched', brands, { pagination }));

@@ -89,11 +89,11 @@ const UserController = {
 
   async read(req: Request, res: Response, next: NextFunction) {
     try {
-      const { limit, cursor } = PaginationService.getCursor(req);
+      const { page, pageLimit, pageOffset } = PaginationService.getParams(req);
 
-      const { users, count } = await UserRepository.findAll(cursor, limit);
+      const { users, count } = await UserRepository.findAll(pageOffset, pageLimit);
 
-      const pagination = PaginationService.getResponse(count, users, req);
+      const pagination = PaginationService.getResponse(page, pageLimit, count, users.length);
 
       res.status(statusCode.OK)
         .send(ResponseDTO.success('Users fetched', users, { pagination }));
@@ -104,15 +104,15 @@ const UserController = {
 
   async readTransactions(req: Request, res: Response, next: NextFunction) {
     try {
-      const { limit, cursor } = PaginationService.getCursor(req);
+      const { page, pageLimit, pageOffset } = PaginationService.getParams(req);
 
-      const { transactions, count } = await TransactionRepository.findAllByUserId(
+      const { transactions, count, } = await TransactionRepository.findAllByUserId(
         req.data.user.id,
-        cursor,
-        limit
+        pageOffset,
+        pageLimit
       );
 
-      const pagination = PaginationService.getResponse(count, transactions, req);
+      const pagination = PaginationService.getResponse(page, pageLimit, count, transactions.length);
 
       res.status(statusCode.OK)
         .send(ResponseDTO.success('Transactions fetched', transactions, { pagination }));

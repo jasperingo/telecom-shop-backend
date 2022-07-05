@@ -1,4 +1,4 @@
-import { Op, WhereOptions } from 'sequelize';
+import { Op } from 'sequelize';
 import Product from '../models/Product';
 import DatabaseConnection from '../configs/database-config';
 import Brand from '../models/Brand';
@@ -69,34 +69,42 @@ const TransactionRepository = {
     });
   },
 
-  findAll(cursor: WhereOptions<Transaction>, limit: number) {
+  findAll(offset: number, limit: number) {
     return DatabaseConnection.transaction(async (transaction) => {
       const [tx, count] = await Promise.all([
         Transaction.findAll({ 
-          where: { ...cursor, status: { [Op.ne]: Transaction.STATUS_CREATED } }, 
+          where: { status: { [Op.ne]: Transaction.STATUS_CREATED } }, 
           limit, 
+          offset,
           order: [['createdAt', 'DESC']], 
           transaction,
         }),
 
-        Transaction.count({ transaction }),
+        Transaction.count({ 
+          where: { status: { [Op.ne]: Transaction.STATUS_CREATED } },
+          transaction 
+        }),
       ]);
 
       return { transactions: tx, count };
     });
   },
 
-  findAllByUserId(userId: number, cursor: WhereOptions<Transaction>, limit: number) {
+  findAllByUserId(userId: number, offset: number, limit: number) {
     return DatabaseConnection.transaction(async (transaction) => {
       const [tx, count] = await Promise.all([
         Transaction.findAll({ 
-          where: { userId, ...cursor, status: { [Op.ne]: Transaction.STATUS_CREATED } }, 
+          where: { userId, status: { [Op.ne]: Transaction.STATUS_CREATED } }, 
           limit, 
+          offset,
           order: [['createdAt', 'DESC']], 
           transaction,
         }),
 
-        Transaction.count({ transaction }),
+        Transaction.count({ 
+          where: { userId, status: { [Op.ne]: Transaction.STATUS_CREATED } }, 
+          transaction 
+        }),
       ]);
 
       return { transactions: tx, count };

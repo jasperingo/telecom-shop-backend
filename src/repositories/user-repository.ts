@@ -1,4 +1,3 @@
-import { WhereOptions } from 'sequelize/types';
 import DatabaseConnection from '../configs/database-config';
 import User from '../models/User';
 
@@ -31,12 +30,12 @@ const UserRepository = {
     return User.findOne({ where: { passwordResetToken } });
   },
 
-  findAll(cursor: WhereOptions<User>, limit: number) {
+  findAll(offset: number, limit: number) {
     return DatabaseConnection.transaction(async (transaction) => {
       const [users, count] = await Promise.all([
         User.findAll({ 
-          where: cursor, 
           limit, 
+          offset,
           order: [['createdAt', 'DESC']], 
           transaction,
         }),

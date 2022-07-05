@@ -32,7 +32,7 @@ const ProductController = {
     try {
       const { products, count } = await ProductRepository.findAll();
 
-      const pagination = PaginationService.getResponse(count, products, req);
+      const pagination = PaginationService.getResponse(1, products.length, count, products.length);
 
       res.status(statusCode.OK)
         .send(ResponseDTO.success('Products fetched', products, { pagination }));
@@ -45,7 +45,7 @@ const ProductController = {
     try {
       const { productUnits, count } = await ProductUnitRepository.findAllByProductId(req.data.product.id);
 
-      const pagination = PaginationService.getResponse(count, productUnits, req);
+      const pagination = PaginationService.getResponse(1, productUnits.length, count, productUnits.length);
 
       res.status(statusCode.OK)
         .send(ResponseDTO.success('Product units fetched', productUnits, { pagination }));

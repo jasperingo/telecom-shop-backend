@@ -1,53 +1,40 @@
 import { Request } from 'express';
-import { Op } from 'sequelize';
+import type PaginationDto from '../dtos/pagination-dto';
 
 const PaginationService = {
-  LIMIT: 2,
+  LIMIT: 10,
 
   getParams(req: Request) {
     const limit = Number(req.query.limit);
-    const afterId = Number(req.query.after);
-    const beforeId = Number(req.query.before);
+    const page = Number(req.query.page);
 
     return {
-      afterId: isNaN(afterId) ? null : afterId,
-      beforeId: isNaN(beforeId) ? null : beforeId,
-      limit: isNaN(limit) ? PaginationService.LIMIT : limit,
+      page: isNaN(page) ? 1 : page,
+      pageLimit: isNaN(limit) ? PaginationService.LIMIT : limit,
+      pageOffset: (isNaN(page) || page <= 1) ? 0 : (page * limit) - limit,
     };
   },
 
-  getCursor(req: Request, key = 'id') {
-    const { limit, afterId, beforeId } = PaginationService.getParams(req);
+  getResponse(
+    currentPage: number, 
+    pageLimit: number, 
+    allPagesCount: number, 
+    currentPageCount: number
+  ): PaginationDto {
+    const numberOfPages = Math.ceil(allPagesCount / pageLimit);
 
-    const cursor = [];
+    const nextPage = currentPage + 1;
+    const previousPage = currentPage - 1;
 
-    if (afterId !== null) {
-      cursor.push({ [key]: { [Op.gt]: afterId } });
-    }
-
-    if (beforeId !== null) {
-      cursor.push({ [key]: { [Op.lt]: beforeId } });
-    }
-
-    return { cursor: { [Op.and]: cursor }, limit };
-  },
-
-  getResponse(total: number, rows: any[], req: Request, key = 'id') {
-    const { limit, afterId, beforeId } = PaginationService.getParams(req);
-
-    const count = rows.length;
-
-    const firstId = 
-      (afterId !== null && beforeId === null && count < limit) 
-        ? null
-        : rows[0]?.[key] ?? null;
-    
-    const lastId =  
-      (afterId === null && beforeId !== null && count < limit) 
-        ? null
-        : rows[count-1]?.[key] ?? null;
-
-    return { total, count, before: lastId, after: firstId, limit };
+    return {
+      pageLimit,
+      currentPage,
+      numberOfPages,
+      allPagesCount,
+      currentPageCount,
+      nextPage: nextPage > numberOfPages ? null : nextPage,
+      previousPage: previousPage < 1 ? null : previousPage,
+    };
   },
 };
 
