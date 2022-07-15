@@ -52,6 +52,27 @@ const UserRepository = {
     });
   },
 
+  findAllByReferralId(referralId: number, offset: number, limit: number) {
+    return DatabaseConnection.transaction(async (transaction) => {
+      const [users, count] = await Promise.all([
+        User.findAll({ 
+          where: { referralId }, 
+          limit, 
+          offset,
+          order: [['createdAt', 'DESC']], 
+          transaction,
+        }),
+
+        User.count({ 
+          where: { referralId }, 
+          transaction 
+        }),
+      ]);
+
+      return { users, count };
+    });
+  },
+
   create({ firstName, lastName, email, phoneNumber, password, referralId }: User) {
     return User.create({ 
       firstName, 

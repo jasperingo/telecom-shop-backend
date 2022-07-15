@@ -47,6 +47,13 @@ export const PermissionBuilder = (user: User) => {
     { id: user.id }
   );
 
+  can(
+    [Action.Read, Action.ReadOne], 
+    User, 
+    ['firstName', 'lastName', 'phoneNumber'], 
+    { referralId: user.id }
+  );
+
   can([Action.Read, Action.ReadOne], [Product, ProductUnit]);
 
   can(Action.Create, Transaction);

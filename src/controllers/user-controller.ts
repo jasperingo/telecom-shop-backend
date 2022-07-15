@@ -102,6 +102,25 @@ const UserController = {
     }
   },
 
+  async readReferrals(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { page, pageLimit, pageOffset } = PaginationService.getParams(req);
+
+      const { users, count, } = await UserRepository.findAllByReferralId(
+        req.data.user.id,
+        pageOffset,
+        pageLimit
+      );
+
+      const pagination = PaginationService.getResponse(page, pageLimit, count, users.length);
+
+      res.status(statusCode.OK)
+        .send(ResponseDTO.success('Referrals fetched', users, { pagination }));
+    } catch(error) {
+      next(InternalServerError(error));
+    }
+  },
+
   async readTransactions(req: Request, res: Response, next: NextFunction) {
     try {
       const { page, pageLimit, pageOffset } = PaginationService.getParams(req);
