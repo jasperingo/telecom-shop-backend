@@ -64,7 +64,7 @@ Photo.init({
     type: DataTypes.VIRTUAL,
     get() {
       const photoName = this.getDataValue('name');
-      return `${process.env.SERVER_HOST}images/${photoName}`;
+      return `${process.env.SERVER_URL}images/${photoName}`;
     }
   },
 },

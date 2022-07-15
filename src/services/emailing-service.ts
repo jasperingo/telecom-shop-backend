@@ -1,17 +1,20 @@
-import sgMail from '@sendgrid/mail';
+import nodemailer from 'nodemailer';
 
-sgMail.setApiKey(process.env.SEND_GRID_API_KEY as string);
-
-const from = {
-  name: process.env.APP_NAME,
-  email: process.env.SEND_GRID_SENDER_EMAIL as string,
-};
+const transporter = nodemailer.createTransport({
+  host: process.env.EMAIL_HOST,
+  port: 465,
+  secure: true, // true for 465, false for other ports
+  auth: {
+    user: process.env.EMAIL_SENDER,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+});
 
 const EmailingService = {
   sendResetPasswordToken(to: string, token: string) {
-    return sgMail.send({
+    return transporter.sendMail({
       to,
-      from,
+      from: `"${process.env.APP_NAME}" <${process.env.EMAIL_SENDER}>`,
       subject: 'Password reset token',
       text: `Your password reset token is ${token}`,
       html: `
@@ -24,7 +27,7 @@ const EmailingService = {
             </div>
           </body>
         </html>
-      `
+      `,
     });
   }
 };
