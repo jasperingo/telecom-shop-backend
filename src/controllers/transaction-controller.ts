@@ -36,6 +36,7 @@ const TransactionController = {
       const result = await TransactionRepository.create({
         amount,  
         reference, 
+        referralId: null,
         productUnitId: null,
         recipientNumber: null,
         userId: (req.user as User).id,
@@ -63,6 +64,7 @@ const TransactionController = {
       const result = await TransactionRepository.create({
         fee: 0,
         reference, 
+        referralId: null,
         productUnitId: null,
         recipientNumber: null,
         amount: req.body.amount,  
@@ -97,6 +99,31 @@ const TransactionController = {
         }
   
         await TransactionRepository.updateStatus(transaction.id, Transaction.STATUS_APPROVED);
+
+        if (
+          transaction.user?.referralId !== null && 
+          transaction.user?.referralId !== undefined &&
+          ! (await TransactionRepository.existsByUserIdAndReferralIdAndType(
+            transaction.user.referralId,
+            transaction.user.id,
+            Transaction.TYPE_BONUS,
+          ))
+        ) {
+          const reference = await this.generateReference();
+
+          await TransactionRepository.create({
+            fee: 0,
+            reference, 
+            depositMethod: null,
+            productUnitId: null,
+            recipientNumber: null,
+            type: Transaction.TYPE_BONUS,
+            referralId: transaction.user.id,
+            userId: transaction.user.referralId,
+            status: Transaction.STATUS_APPROVED, 
+            amount: Number((transaction.amount / 100).toFixed(2)),
+          });
+        }
       }
 
       res.status(statusCode.OK).send({ reference: req.body.data.reference });
@@ -129,8 +156,9 @@ const TransactionController = {
       );
 
       const result = await TransactionRepository.create({
-        reference, 
         fee: 0,
+        reference, 
+        referralId: null,
         depositMethod: null,
         amount: -productUnit.price,  
         userId: (req.user as User).id,
@@ -162,8 +190,9 @@ const TransactionController = {
       );
 
       const result = await TransactionRepository.create({
-        reference, 
         fee: 0,
+        reference, 
+        referralId: null,
         depositMethod: null,
         amount: -productUnit.price,  
         userId: (req.user as User).id,
@@ -196,8 +225,9 @@ const TransactionController = {
       );
 
       const result = await TransactionRepository.create({
-        reference, 
         fee: 0,
+        reference, 
+        referralId: null,
         depositMethod: null,
         amount: -productUnit.price,  
         userId: (req.user as User).id,
@@ -229,8 +259,9 @@ const TransactionController = {
       );
 
       const result = await TransactionRepository.create({
-        reference, 
         fee: 0,
+        reference, 
+        referralId: null,
         depositMethod: null,
         amount: -productUnit.price,  
         userId: (req.user as User).id,

@@ -15,6 +15,10 @@ class Transaction extends Model<InferAttributes<Transaction>, InferCreationAttri
 
   declare productUnit?: NonAttribute<ProductUnit> | null;
 
+  declare referralId: ForeignKey<User['id']> | null;
+
+  declare referral?: NonAttribute<User> | null;
+
   declare reference: string;
 
   declare amount: number;
@@ -34,6 +38,8 @@ class Transaction extends Model<InferAttributes<Transaction>, InferCreationAttri
   declare total: CreationOptional<number>;
 
   static readonly TYPE_DEPOSIT = 'deposit';
+
+  static readonly TYPE_BONUS = 'bonus';
 
   static readonly TYPE_PAYMENT = 'payment';
 
@@ -163,5 +169,14 @@ ProductUnit.hasMany(Transaction, { foreignKey: pForeignKey, as: 'productUnit' })
 
 Transaction.belongsTo(ProductUnit, { foreignKey: pForeignKey, as: 'productUnit' });
 
+const rForeignKey = {
+  name: 'referralId',
+  field: 'referral_id',
+  type: DataTypes.INTEGER
+};
+
+User.hasMany(Transaction, { foreignKey: rForeignKey });
+
+Transaction.belongsTo(User, { foreignKey: rForeignKey, as: 'referral' });
 
 export default Transaction;

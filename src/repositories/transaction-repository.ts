@@ -13,6 +13,11 @@ const TransactionRepository = {
     return transaction !== null;
   },
 
+  async existsByUserIdAndReferralIdAndType(userId: number, referralId: number, type: string) {
+    const transaction = await Transaction.findOne({ where: { userId, referralId, type } });
+    return transaction !== null;
+  },
+
   async sumAmountByUserIdAndStatus(userId: number, status = Transaction.STATUS_APPROVED) {
     const sum = await Transaction.sum('amount', { where: { userId, status } });
     return sum ?? 0;
@@ -112,13 +117,13 @@ const TransactionRepository = {
   },
 
   create(
-    { amount, fee, recipientNumber, reference, status, type, userId, productUnitId, depositMethod }: 
+    { amount, fee, recipientNumber, reference, status, type, userId, productUnitId, depositMethod, referralId }: 
     Pick<
       Transaction, 
-      'reference' | 'recipientNumber' | 'amount' | 'fee' | 'userId' | 'status' | 'type' | 'productUnitId' | 'depositMethod'
+      'reference' | 'recipientNumber' | 'amount' | 'fee' | 'userId' | 'status' | 'type' | 'productUnitId' | 'depositMethod' | 'referralId'
     >
   ) {
-    return Transaction.create({ amount, fee, recipientNumber, reference, status, type, userId, productUnitId, depositMethod });
+    return Transaction.create({ amount, fee, recipientNumber, reference, status, type, userId, productUnitId, depositMethod, referralId });
   },
 
   updateStatus(id: number, status: string) {
