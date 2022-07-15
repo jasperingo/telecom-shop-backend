@@ -1,9 +1,21 @@
-import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import { 
+  Model, 
+  DataTypes, 
+  InferAttributes, 
+  InferCreationAttributes, 
+  CreationOptional, 
+  ForeignKey, 
+  NonAttribute 
+} from 'sequelize';
 import DatabaseConnection from '../configs/database-config';
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
 
   declare id: CreationOptional<number>;
+
+  declare referralId: ForeignKey<User['id']>;
+
+  declare referral?: NonAttribute<User>;
 
   declare firstName: string;
 
@@ -118,5 +130,15 @@ User.init({
   modelName: 'user',
   sequelize: DatabaseConnection,
 });
+
+const foreignKey = {
+  name: 'referralId',
+  field: 'referral_id',
+  type: DataTypes.INTEGER
+};
+
+User.hasMany(User, { foreignKey });
+
+User.belongsTo(User, { foreignKey, as: 'referral' });
 
 export default User;

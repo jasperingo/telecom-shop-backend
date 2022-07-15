@@ -2,7 +2,14 @@ import { NextFunction, Request, Response } from 'express';
 import { checkSchema, Schema, validationResult } from 'express-validator';
 import { ValidationBadRequest } from '../../../errors/validation-error-handler';
 import UserRepository from '../../../repositories/user-repository';
-import { isEmail, isMobilePhone, isMobilePhoneLength, isPasswordLength, notEmpty } from '../validation-contraints';
+import { 
+  isEmail, 
+  isMobilePhone, 
+  isMobilePhoneLength, 
+  isPasswordLength, 
+  notEmpty, 
+  isNumeric 
+} from '../validation-contraints';
 
 const schema: Schema = {
   firstName: { notEmpty },
@@ -19,7 +26,9 @@ const schema: Schema = {
         if (await UserRepository.existsByEmail(value))
           throw 'Field already exists';
       }
-    }
+    },
+
+    toLowerCase: true,
   },
 
   phoneNumber: {
@@ -41,6 +50,22 @@ const schema: Schema = {
     notEmpty,
 
     isLength: isPasswordLength,
+  },
+
+  referralId: {
+    optional: true,
+
+    notEmpty,
+
+    isNumeric,
+
+    custom: {
+      options: async (value) => {
+        const user = await UserRepository.findById(value);
+        if (user === null)
+          throw 'Field do not exist';
+      }
+    }
   }
 };
 

@@ -2,7 +2,6 @@ import DatabaseConnection from '../configs/database-config';
 import User from '../models/User';
 
 const UserRepository = {
-
   async existsByEmail(email: string) {
     const user = await User.findOne({ where: { email } });
     return user !== null;
@@ -19,7 +18,13 @@ const UserRepository = {
   },
 
   findById(id: number) {
-    return User.findByPk(id);
+    return User.findByPk(id, { 
+      include: {
+        model: User,
+        as: 'referral',
+        attributes: ['id', 'firstName', 'lastName', 'phoneNumber'],
+      },
+    });
   },
 
   findByEmail(email: string) {
@@ -47,13 +52,14 @@ const UserRepository = {
     });
   },
 
-  create({ firstName, lastName, email, phoneNumber, password }: User) {
+  create({ firstName, lastName, email, phoneNumber, password, referralId }: User) {
     return User.create({ 
       firstName, 
       lastName, 
       email, 
       phoneNumber, 
       password, 
+      referralId,
       admin: false,
       status: User.STATUS_ACTIVATED, 
     });

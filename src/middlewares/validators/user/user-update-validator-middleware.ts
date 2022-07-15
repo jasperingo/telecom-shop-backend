@@ -29,7 +29,9 @@ const schema: Schema = {
         if (await UserRepository.existsByEmail(value))
           throw 'Field already exists';
       }
-    }
+    },
+
+    toLowerCase: true,
   },
 
   phoneNumber: {
