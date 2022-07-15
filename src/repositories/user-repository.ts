@@ -56,6 +56,7 @@ const UserRepository = {
     return DatabaseConnection.transaction(async (transaction) => {
       const [users, count] = await Promise.all([
         User.findAll({ 
+          attributes: ['id', 'firstName', 'lastName', 'phoneNumber', 'createdAt'],
           where: { referralId }, 
           limit, 
           offset,
