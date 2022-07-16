@@ -13,6 +13,8 @@ import { JwtAuth, PasswordAuth } from './configs/auth-config';
 passport.use(JwtAuth);
 passport.use(PasswordAuth);
 
+const port = process.env.PORT || process.env.SERVER_PORT;
+
 const app = express();
 
 app.use(cors({ preflightContinue: true }));
@@ -37,6 +39,6 @@ app.use((req, res, next) => {
 
 app.use(ErrorHandler);
 
-app.listen(process.env.SERVER_PORT, () => {
-  console.log(`Server running at ${process.env.SERVER_HOST}:${ process.env.SERVER_PORT }`);
+app.listen(port, () => {
+  console.log(`Server running at ${process.env.SERVER_HOST}:${port}`);
 });
