@@ -4,6 +4,9 @@ const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
   port: 465,
   secure: true, // true for 465, false for other ports
+  tls: {
+    rejectUnauthorized: false,
+  },
   auth: {
     user: process.env.EMAIL_SENDER,
     pass: process.env.EMAIL_PASSWORD,
