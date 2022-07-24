@@ -27,6 +27,8 @@ class ProductUnit extends Model<InferAttributes<ProductUnit>, InferCreationAttri
 
   declare price: number;
 
+  declare purchasingPrice: number;
+
   declare duration: number;
 
   declare apiCode: number;
@@ -55,6 +57,12 @@ ProductUnit.init({
   price: {
     type: DataTypes.DOUBLE,
     allowNull: false,
+  },
+
+  purchasingPrice: {
+    type: DataTypes.DOUBLE,
+    allowNull: false,
+    field: 'purchasing_price',
   },
 
   duration: {

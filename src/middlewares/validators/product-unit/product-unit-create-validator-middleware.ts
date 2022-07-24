@@ -3,7 +3,7 @@ import { checkSchema, Schema, validationResult } from 'express-validator';
 import { ValidationBadRequest } from '../../../errors/validation-error-handler';
 import BrandRepository from '../../../repositories/brand-repository';
 import ProductRepository from '../../../repositories/product-repository';
-import { notEmpty, isNumeric, isBoolean } from '../validation-contraints';
+import { notEmpty, isNumeric, isBoolean, isPrice } from '../validation-contraints';
 
 const schema: Schema = {
   name: { notEmpty },
@@ -11,7 +11,13 @@ const schema: Schema = {
   price: { 
     notEmpty, 
 
-    isNumeric,
+    isFloat: isPrice,
+  },
+
+  purchasingPrice: { 
+    notEmpty, 
+
+    isFloat: isPrice,
   },
 
   duration: { 

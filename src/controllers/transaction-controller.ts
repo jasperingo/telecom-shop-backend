@@ -186,7 +186,7 @@ const TransactionController = {
       await TentendataService.buyAirtime(
         productUnit.brand?.apiCode as number, 
         req.body.phoneNumber, 
-        productUnit.price,
+        productUnit.purchasingPrice,
       );
 
       const result = await TransactionRepository.create({
@@ -220,7 +220,7 @@ const TransactionController = {
       await TentendataService.buyElectricity(
         productUnit.brand?.apiCode as number, 
         req.body.meterNumber, 
-        productUnit.price,
+        productUnit.purchasingPrice,
         productUnit.type
       );
 

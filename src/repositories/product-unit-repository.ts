@@ -75,13 +75,13 @@ const ProductUnitRepository = {
     });
   },
 
-  create({ name, apiCode, brandId, productId, price, duration, available, type }: ProductUnit) {
-    return ProductUnit.create({ name, apiCode, brandId, productId, price, duration, available, type });
+  create({ name, apiCode, brandId, productId, price, duration, available, type, purchasingPrice }: ProductUnit) {
+    return ProductUnit.create({ name, apiCode, brandId, productId, price, duration, available, type, purchasingPrice });
   },
 
-  update({ id, name, apiCode, brandId, price, duration, available }: ProductUnit) {
+  update({ id, name, apiCode, brandId, price, duration, available, purchasingPrice }: ProductUnit) {
     return ProductUnit.update(
-      { name, apiCode, brandId, price, duration, available },
+      { name, apiCode, brandId, price, duration, available, purchasingPrice },
       { where: { id } }
     );
   },

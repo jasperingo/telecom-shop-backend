@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { checkSchema, Schema, validationResult } from 'express-validator';
 import { ValidationBadRequest } from '../../../errors/validation-error-handler';
 import BrandRepository from '../../../repositories/brand-repository';
-import { notEmpty, isNumeric, isBoolean } from '../validation-contraints';
+import { notEmpty, isNumeric, isBoolean, isPrice } from '../validation-contraints';
 
 const schema: Schema = {
   name: { 
@@ -16,7 +16,15 @@ const schema: Schema = {
 
     notEmpty, 
 
-    isNumeric,
+    isFloat: isPrice,
+  },
+
+  purchasingPrice: { 
+    optional: true,
+    
+    notEmpty, 
+
+    isFloat: isPrice,
   },
 
   duration: { 
