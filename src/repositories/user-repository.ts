@@ -28,7 +28,14 @@ const UserRepository = {
   },
 
   findByEmail(email: string) {
-    return User.findOne({ where: { email } });
+    return User.findOne({ 
+      where: { email },
+      include: {
+        model: User,
+        as: 'referral',
+        attributes: ['id', 'firstName', 'lastName', 'phoneNumber'],
+      },
+    });
   },
 
   findByPasswordResetToken(passwordResetToken: string) {
