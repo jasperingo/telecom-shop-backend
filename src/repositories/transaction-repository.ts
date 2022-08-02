@@ -74,11 +74,15 @@ const TransactionRepository = {
     });
   },
 
-  findAll(offset: number, limit: number) {
+  findAll(offset: number, limit: number, type?: string) {
+    const status = { status: { [Op.ne]: Transaction.STATUS_CREATED } };
+
+    const where = type === undefined ? status : { type, ...status };
+
     return DatabaseConnection.transaction(async (transaction) => {
       const [tx, count] = await Promise.all([
         Transaction.findAll({ 
-          where: { status: { [Op.ne]: Transaction.STATUS_CREATED } }, 
+          where, 
           limit, 
           offset,
           order: [['createdAt', 'DESC']], 
@@ -86,7 +90,7 @@ const TransactionRepository = {
         }),
 
         Transaction.count({ 
-          where: { status: { [Op.ne]: Transaction.STATUS_CREATED } },
+          where,
           transaction 
         }),
       ]);
@@ -95,11 +99,15 @@ const TransactionRepository = {
     });
   },
 
-  findAllByUserId(userId: number, offset: number, limit: number) {
+  findAllByUserId(userId: number, offset: number, limit: number, type?: string) {
+    const statusAndUser = { userId, status: { [Op.ne]: Transaction.STATUS_CREATED } };
+
+    const where = type === undefined ? statusAndUser : { type, ...statusAndUser };
+  
     return DatabaseConnection.transaction(async (transaction) => {
       const [tx, count] = await Promise.all([
         Transaction.findAll({ 
-          where: { userId, status: { [Op.ne]: Transaction.STATUS_CREATED } }, 
+          where, 
           limit, 
           offset,
           order: [['createdAt', 'DESC']], 
@@ -107,7 +115,7 @@ const TransactionRepository = {
         }),
 
         Transaction.count({ 
-          where: { userId, status: { [Op.ne]: Transaction.STATUS_CREATED } }, 
+          where, 
           transaction 
         }),
       ]);

@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import statusCode from 'http-status';
+import Transaction from '../models/Transaction';
 import ResponseDTO from '../dtos/response-dto';
 import { InternalServerError } from '../errors/server-error-handler';
 import TransactionRepository from '../repositories/transaction-repository';
@@ -125,10 +126,15 @@ const UserController = {
     try {
       const { page, pageLimit, pageOffset } = PaginationService.getParams(req);
 
+      const type = Transaction.getTypes().includes(req.query.type as string) 
+        ? req.query.type as string 
+        : undefined;
+
       const { transactions, count, } = await TransactionRepository.findAllByUserId(
         req.data.user.id,
         pageOffset,
-        pageLimit
+        pageLimit,
+        type,
       );
 
       const pagination = PaginationService.getResponse(page, pageLimit, count, transactions.length);

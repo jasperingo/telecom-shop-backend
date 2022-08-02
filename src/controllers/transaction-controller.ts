@@ -304,7 +304,15 @@ const TransactionController = {
     try {
       const { page, pageLimit, pageOffset } = PaginationService.getParams(req);
 
-      const { transactions, count } = await TransactionRepository.findAll(pageOffset, pageLimit);
+      const type = Transaction.getTypes().includes(req.query.type as string) 
+        ? req.query.type as string 
+        : undefined;
+
+      const { transactions, count } = await TransactionRepository.findAll(
+        pageOffset, 
+        pageLimit, 
+        type,
+      );
 
       const pagination = PaginationService.getResponse(page, pageLimit, count, transactions.length);
 
