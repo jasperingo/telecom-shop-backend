@@ -55,7 +55,7 @@ class Transaction extends Model<InferAttributes<Transaction>, InferCreationAttri
 
   static readonly DEPOSIT_METHOD_PAYSTACK = 'paystack';
 
-  static readonly PAYSTACK_FEE = { threshold: 2500, min: 12.5, max: 32.5 };
+  static readonly PAYSTACK_FEE = { threshold: 2500, min: 1.6, max: 3.7 };
 
   static readonly MINIMIUM_DEPOSIT_AMOUNT = 500.00;
 
