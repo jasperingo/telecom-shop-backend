@@ -80,7 +80,7 @@ export const PermissionBuilder = (user: User) => {
     can(Action.Update, User, ['admin'], { id: { $ne: user.id } });
   }
 
-  if (user.status === User.STATUS_DEACTIVATED) {
+  if (user.status === User.STATUS_DEACTIVATED || !user.emailVerified) {
     cannot(Action.Manage, 'all');
   }
 

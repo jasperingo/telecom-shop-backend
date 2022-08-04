@@ -14,6 +14,7 @@ import UserCreateValidatorMiddleware from '../middlewares/validators/user/user-c
 import UserPasswordUpdateValidatorMiddleware from '../middlewares/validators/user/user-password-update-validator-middleware';
 import UserStatusUpdateValidatorMiddleware from '../middlewares/validators/user/user-status-update-validator-middleware';
 import UserUpdateValidatorMiddleware from '../middlewares/validators/user/user-update-validator-middleware';
+import UserEmailVerifiedUpdateValidatorMiddleware from '../middlewares/validators/user/user-email-verified-update-validation-middleware';
 
 const UserRoutes = express.Router();
 
@@ -63,6 +64,19 @@ UserRoutes.put(
   UserStatusUpdatePermissionMiddleware,
   UserStatusUpdateValidatorMiddleware,
   UserController.updateStatus.bind(UserController)
+);
+
+UserRoutes.put(
+  '/:id/email-verification-token', 
+  UserFetchMiddleware,
+  UserController.updateEmailVerificationToken.bind(UserController)
+);
+
+UserRoutes.put(
+  '/:id/email-verified', 
+  UserFetchMiddleware,
+  UserEmailVerifiedUpdateValidatorMiddleware,
+  UserController.updateEmailVerified.bind(UserController)
 );
 
 UserRoutes.put(

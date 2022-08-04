@@ -35,6 +35,10 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
 
   declare passwordResetToken: CreationOptional<string | null>;
 
+  declare emailVerified: boolean;
+
+  declare emailVerificationToken: string;
+
   declare createdAt: CreationOptional<Date>;
 
   static readonly STATUS_ACTIVATED = 'activated';
@@ -46,6 +50,8 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   static readonly ADMIN_ROLE_SUPER = 'super';
 
   static readonly PASSWORD_RESET_TOKEN_LENGTH = 6;
+
+  static readonly EMAIL_VERIFICATION_TOKEN_LENGTH = 6;
 
   static getStatuses() {
     return [
@@ -117,6 +123,16 @@ User.init({
   passwordResetToken: {
     type: DataTypes.STRING,
     field: 'password_reset_token',
+  },
+
+  emailVerified: {
+    type: DataTypes.BOOLEAN,
+    field: 'email_verified',
+  },
+
+  emailVerificationToken: {
+    type: DataTypes.STRING,
+    field: 'email_verification_token',
   },
 
   createdAt: {

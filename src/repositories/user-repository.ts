@@ -17,6 +17,11 @@ const UserRepository = {
     return user !== null;
   },
 
+  async existsByEmailVerificationToken(emailVerificationToken: string) {
+    const user = await User.findOne({ where: { emailVerificationToken } });
+    return user !== null;
+  },
+
   findById(id: number) {
     return User.findByPk(id, { 
       include: {
@@ -40,6 +45,10 @@ const UserRepository = {
 
   findByPasswordResetToken(passwordResetToken: string) {
     return User.findOne({ where: { passwordResetToken } });
+  },
+
+  findByEmailVerificationToken(emailVerificationToken: string) {
+    return User.findOne({ where: { emailVerificationToken } });
   },
 
   findAll(offset: number, limit: number) {
@@ -81,7 +90,7 @@ const UserRepository = {
     });
   },
 
-  create({ firstName, lastName, email, phoneNumber, password, referralId }: User) {
+  create({ firstName, lastName, email, phoneNumber, password, referralId, emailVerificationToken }: User) {
     return User.create({ 
       firstName, 
       lastName, 
@@ -89,6 +98,8 @@ const UserRepository = {
       phoneNumber, 
       password, 
       referralId,
+      emailVerificationToken,
+      emailVerified: false,
       admin: false,
       status: User.STATUS_ACTIVATED, 
     });
@@ -123,6 +134,14 @@ const UserRepository = {
 
   updatePasswordResetToken(id: number, passwordResetToken: string | null) {
     return User.update({ passwordResetToken }, { where: { id } });
+  },
+
+  updateEmailVerified(id: number, emailVerified: boolean) {
+    return User.update({ emailVerified }, { where: { id } });
+  },
+
+  updateEmailVerificationToken(id: number, emailVerificationToken: string) {
+    return User.update({ emailVerificationToken }, { where: { id } });
   },
 };
 

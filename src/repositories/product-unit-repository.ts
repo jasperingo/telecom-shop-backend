@@ -16,8 +16,8 @@ const ProductUnitRepository = {
         {
           model: Brand,
           include: [
-            { model: Photo }
-          ]
+            { model: Photo },
+          ],
         },
         {
           model: Product,
@@ -34,13 +34,14 @@ const ProductUnitRepository = {
             {
               model: Brand,
               include: [
-                { model: Photo }
+                { model: Photo },
               ],
             },
             {
               model: Product,
             },
           ],
+          order: [['createdAt', 'DESC']], 
           transaction,
         }),
         ProductUnit.count({ transaction }),
@@ -59,13 +60,14 @@ const ProductUnitRepository = {
             {
               model: Brand,
               include: [
-                { model: Photo }
+                { model: Photo },
               ],
             },
             {
               model: Product,
             }
           ], 
+          order: [['createdAt', 'DESC']], 
           transaction,
         }),
         ProductUnit.count({ where: { productId }, transaction }),
@@ -79,9 +81,9 @@ const ProductUnitRepository = {
     return ProductUnit.create({ name, apiCode, brandId, productId, price, duration, available, type, purchasingPrice });
   },
 
-  update({ id, name, apiCode, brandId, price, duration, available, purchasingPrice }: ProductUnit) {
+  update({ id, name, apiCode, brandId, price, duration, available, type, purchasingPrice }: ProductUnit) {
     return ProductUnit.update(
-      { name, apiCode, brandId, price, duration, available, purchasingPrice },
+      { name, apiCode, brandId, price, duration, available, purchasingPrice, type },
       { where: { id } }
     );
   },
