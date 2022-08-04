@@ -23,6 +23,11 @@ const TransactionRepository = {
     return sum ?? 0;
   },
 
+  async sumAmountByTypeAndStatus(type: string, status = Transaction.STATUS_APPROVED) {
+    const sum = await Transaction.sum('amount', { where: { type, status } });
+    return sum ?? 0;
+  },
+
   findById(id: number) {
     return Transaction.findByPk(id, {
       include: [
@@ -33,17 +38,13 @@ const TransactionRepository = {
             {
               model: Brand,
               include: [
-                { model: Photo }
+                { model: Photo },
               ]
             },
-            {
-              model: Product
-            }
+            { model: Product },
           ],
         },
-        {
-          model: User
-        }
+        { model: User },
       ]
     });
   },
@@ -59,17 +60,13 @@ const TransactionRepository = {
             {
               model: Brand,
               include: [
-                { model: Photo }
+                { model: Photo },
               ]
             },
-            {
-              model: Product
-            }
+            { model: Product },
           ],
         },
-        {
-          model: User
-        }
+        { model: User },
       ]
     });
   },
@@ -121,6 +118,21 @@ const TransactionRepository = {
       ]);
 
       return { transactions: tx, count };
+    });
+  },
+
+  countAll() {
+    return Transaction.count({ 
+        where: { status: { [Op.ne]: Transaction.STATUS_CREATED } },
+    });
+  },
+
+  countAllByType(type: string) {
+    return Transaction.count({ 
+        where: { 
+          type, 
+          status: { [Op.ne]: Transaction.STATUS_CREATED } 
+        },
     });
   },
 

@@ -77,6 +77,10 @@ const ProductUnitRepository = {
     });
   },
 
+  countAll() {
+    return ProductUnit.count();
+  },
+
   create({ name, apiCode, brandId, productId, price, duration, available, type, purchasingPrice }: ProductUnit) {
     return ProductUnit.create({ name, apiCode, brandId, productId, price, duration, available, type, purchasingPrice });
   },

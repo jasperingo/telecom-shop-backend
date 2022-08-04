@@ -43,9 +43,7 @@ const TransactionController = {
         type: Transaction.TYPE_DEPOSIT,
         status: Transaction.STATUS_CREATED, 
         depositMethod: Transaction.DEPOSIT_METHOD_PAYSTACK,
-        fee: amount <= Transaction.PAYSTACK_FEE.threshold 
-          ? (amount * Transaction.PAYSTACK_FEE.min) / 100
-          : (amount * Transaction.PAYSTACK_FEE.max) / 100,
+        fee: Transaction.getPaystackFee(amount),
       });
 
       const transaction = await TransactionRepository.findById(result.id);

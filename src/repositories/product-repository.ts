@@ -27,6 +27,10 @@ const ProductRepository = {
     });
   },
 
+  countAll() {
+    return Product.count();
+  },
+
   update({ id, name, description, available }: Product) {
     return Product.update(
       { name, description, available }, 

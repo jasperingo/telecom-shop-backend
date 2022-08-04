@@ -90,6 +90,10 @@ const UserRepository = {
     });
   },
 
+  countAll() {
+    return User.count();
+  },
+
   create({ firstName, lastName, email, phoneNumber, password, referralId, emailVerificationToken }: User) {
     return User.create({ 
       firstName, 

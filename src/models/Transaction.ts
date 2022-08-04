@@ -84,6 +84,14 @@ class Transaction extends Model<InferAttributes<Transaction>, InferCreationAttri
       Transaction.DEPOSIT_METHOD_PAYSTACK,
     ];
   }
+
+  static getPaystackFee(amount: number) {
+    const fee = amount <= Transaction.PAYSTACK_FEE.threshold 
+      ? ((amount * Transaction.PAYSTACK_FEE.min) / 100).toFixed(2)
+      : ((amount * Transaction.PAYSTACK_FEE.max) / 100).toFixed(2);
+
+    return Number(fee);
+  }
 }
 
 Transaction.init({

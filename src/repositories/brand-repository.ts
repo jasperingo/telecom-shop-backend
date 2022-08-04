@@ -36,6 +36,10 @@ const BrandRepository = {
     });
   },
 
+  countAll() {
+    return Brand.count();
+  },
+
   create({ name, apiCode }: Brand, transaction?: Transaction) {
     return Brand.create({ name, apiCode }, { transaction });
   },
